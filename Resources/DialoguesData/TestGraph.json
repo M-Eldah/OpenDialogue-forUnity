@@ -1,0 +1,35 @@
+{
+    "name": "TestGraph",
+    "id": 1,
+    "startIndex": 0,
+    "Nodes": [
+        {
+            "name": "InputNode-ID:0",
+            "id": 0,
+            "dialogueText": [],
+            "extraValues": [
+                "int",
+                "[1-9]"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 550.0,
+                "y": 120.0
+            },
+            "subType": 14,
+            "NodeType": 1,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "UiExamplePrefab",
+            "q_string2": "dialogueText",
+            "q_bool1": true,
+            "q_bool2": false,
+            "Tag": "214"
+        }
+    ],
+    "Group": [],
+    "groudid": 0
+}

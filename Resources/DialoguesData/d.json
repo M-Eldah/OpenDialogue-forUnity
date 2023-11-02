@@ -1,0 +1,38 @@
+{
+    "name": "d",
+    "id": 1,
+    "startIndex": 0,
+    "Nodes": [
+        {
+            "name": "SingleNode-ID:0",
+            "id": 0,
+            "dialogueText": [
+                "h"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 415.0,
+                "y": 125.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        }
+    ],
+    "Group": [],
+    "groudid": 0
+}

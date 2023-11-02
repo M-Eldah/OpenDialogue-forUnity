@@ -1,0 +1,34 @@
+{
+    "name": "Data",
+    "id": 1,
+    "startIndex": 0,
+    "Nodes": [
+        {
+            "name": "InputNode-ID:0",
+            "id": 0,
+            "dialogueText": [],
+            "extraValues": [
+                "float"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 550.0,
+                "y": 120.0
+            },
+            "subType": 14,
+            "NodeType": 1,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "Text (TMP)",
+            "q_string2": "mesh",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        }
+    ],
+    "Group": [],
+    "groudid": 0
+}
