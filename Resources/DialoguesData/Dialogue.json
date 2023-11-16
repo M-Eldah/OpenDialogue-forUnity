@@ -1,15 +1,19 @@
 {
-    "name": "SimpleDialogue",
+    "name": "Dialogue",
     "id": 4,
-    "startIndex": 1,
+    "startIndex": 0,
     "Nodes": [
         {
             "name": "SingleNode-ID:0",
             "id": 0,
             "dialogueText": [
-                "Dialogue0"
+                "Dialogue0",
+                "Dialogue1"
             ],
             "extraValues": [
+                "0",
+                "0",
+                "False",
                 "0",
                 "0",
                 "False"
@@ -18,13 +22,13 @@
                 "Dialouge"
             ],
             "pos": {
-                "x": 323.0,
-                "y": 118.0
+                "x": 444.0,
+                "y": 420.0
             },
             "subType": 0,
             "NodeType": 0,
             "ConnectedNodes": [
-                -1
+                1
             ],
             "q_string1": "",
             "q_string2": "",
@@ -33,37 +37,8 @@
             "Tag": ""
         },
         {
-            "name": "SingleNode-ID:1",
+            "name": "InputNode-ID:1",
             "id": 1,
-            "dialogueText": [
-                "Hello Friend What's your name ?"
-            ],
-            "extraValues": [
-                "0",
-                "0",
-                "False"
-            ],
-            "choices": [
-                "Dialouge"
-            ],
-            "pos": {
-                "x": 539.0,
-                "y": 345.0
-            },
-            "subType": 0,
-            "NodeType": 0,
-            "ConnectedNodes": [
-                2
-            ],
-            "q_string1": "",
-            "q_string2": "",
-            "q_bool1": false,
-            "q_bool2": false,
-            "Tag": ""
-        },
-        {
-            "name": "InputNode-ID:2",
-            "id": 2,
             "dialogueText": [],
             "extraValues": [
                 "string",
@@ -73,41 +48,70 @@
                 "Dialouge"
             ],
             "pos": {
-                "x": 813.0,
-                "y": 345.0
+                "x": 726.0,
+                "y": 420.0
             },
             "subType": 14,
             "NodeType": 1,
             "ConnectedNodes": [
-                3
+                2
             ],
             "q_string1": "GameObject",
-            "q_string2": "CharacterName",
+            "q_string2": "Value",
             "q_bool1": true,
             "q_bool2": false,
             "Tag": ""
         },
         {
-            "name": "ScriptNode-ID:3",
-            "id": 3,
+            "name": "ActionNode-ID:2",
+            "id": 2,
             "dialogueText": [],
+            "extraValues": [
+                "{Name}"
+            ],
+            "choices": [
+                "Dialogue"
+            ],
+            "pos": {
+                "x": 1031.0,
+                "y": 420.0
+            },
+            "subType": 2,
+            "NodeType": 1,
+            "ConnectedNodes": [
+                3
+            ],
+            "q_string1": "GameObject",
+            "q_string2": "AddKey",
+            "q_bool1": false,
+            "q_bool2": true,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:3",
+            "id": 3,
+            "dialogueText": [
+                "Hello {Name}"
+            ],
             "extraValues": [
                 "0",
                 "0",
-                ""
+                "False"
             ],
-            "choices": [],
+            "choices": [
+                "Dialouge"
+            ],
             "pos": {
-                "x": 1113.0,
-                "y": 345.0
+                "x": 1349.0,
+                "y": 420.0
             },
-            "subType": 12,
+            "subType": 0,
             "NodeType": 0,
             "ConnectedNodes": [
                 -1
             ],
-            "q_string1": "GameObject",
-            "q_string2": "Greeting",
+            "q_string1": "",
+            "q_string2": "",
             "q_bool1": false,
             "q_bool2": false,
             "Tag": ""

@@ -7,7 +7,7 @@ public class DemoScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        DialogueSystem.Load("Dialogue");   
     }
 
     // Update is called once per frame

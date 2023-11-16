@@ -46,27 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Dialogue:
     name: TestGraph
-    id: 1
+    id: 0
     startIndex: 0
-    Nodes:
-    - name: SingleNode-ID:0
-      id: 0
-      dialogueText:
-      - Dialogue0
-      extraValues:
-      - 0
-      - 0
-      - False
-      choices:
-      - Dialouge
-      pos: {x: 323, y: 118}
-      subType: 0
-      NodeType: 0
-      ConnectedNodes: ffffffff
-      q_string1: 
-      q_string2: 
-      q_bool1: 0
-      q_bool2: 0
-      Tag: 
+    Nodes: []
     Group: []
     groudid: 0

@@ -449,7 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomValue: 1
   SetValue: 0
-  CharacterName: 
+  Value: 
 --- !u!4 &241218781
 Transform:
   m_ObjectHideFlags: 0
@@ -1434,7 +1434,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Enter
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2909,81 +2909,84 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OverRideStartNode: -1
-  DialogueName: SimpleDialogue
-  index: 7
+  DialogueName: Dialogue
+  index: 1
   data:
-    Name: SimpleDialogue
-    startIndex: 1
+    Name: Dialogue
+    startIndex: 0
     nodes:
     - name: SingleNode-ID:0
       id: 0
       dialogueText:
       - Dialogue0
+      - Dialogue1
       extraValues:
+      - 0
+      - 0
+      - False
       - 0
       - 0
       - False
       choices:
       - Dialouge
-      pos: {x: 323, y: 118}
+      pos: {x: 444, y: 420}
       subType: 0
       NodeType: 0
-      ConnectedNodes: ffffffff
+      ConnectedNodes: 01000000
       q_string1: 
       q_string2: 
       q_bool1: 0
       q_bool2: 0
       Tag: 
-    - name: SingleNode-ID:1
+    - name: InputNode-ID:1
       id: 1
-      dialogueText:
-      - Hello Friend What's your name ?
-      extraValues:
-      - 0
-      - 0
-      - False
-      choices:
-      - Dialouge
-      pos: {x: 539, y: 345}
-      subType: 0
-      NodeType: 0
-      ConnectedNodes: 02000000
-      q_string1: 
-      q_string2: 
-      q_bool1: 0
-      q_bool2: 0
-      Tag: 
-    - name: InputNode-ID:2
-      id: 2
       dialogueText: []
       extraValues:
       - string
       - 
       choices:
       - Dialouge
-      pos: {x: 813, y: 345}
+      pos: {x: 726, y: 420}
       subType: 14
       NodeType: 1
-      ConnectedNodes: 03000000
+      ConnectedNodes: 02000000
       q_string1: GameObject
-      q_string2: CharacterName
+      q_string2: Value
       q_bool1: 1
       q_bool2: 0
       Tag: 
-    - name: ScriptNode-ID:3
-      id: 3
+    - name: ActionNode-ID:2
+      id: 2
       dialogueText: []
+      extraValues:
+      - '{Name}'
+      choices:
+      - Dialogue
+      pos: {x: 1031, y: 420}
+      subType: 2
+      NodeType: 1
+      ConnectedNodes: 03000000
+      q_string1: GameObject
+      q_string2: AddKey
+      q_bool1: 0
+      q_bool2: 1
+      Tag: 
+    - name: SingleNode-ID:3
+      id: 3
+      dialogueText:
+      - Hello {Name}
       extraValues:
       - 0
       - 0
-      - 
-      choices: []
-      pos: {x: 1113, y: 345}
-      subType: 12
+      - False
+      choices:
+      - Dialouge
+      pos: {x: 1349, y: 420}
+      subType: 0
       NodeType: 0
       ConnectedNodes: ffffffff
-      q_string1: GameObject
-      q_string2: Greeting
+      q_string1: 
+      q_string2: 
       q_bool1: 0
       q_bool2: 0
       Tag: 
@@ -2992,71 +2995,74 @@ MonoBehaviour:
     id: 0
     dialogueText:
     - Dialogue0
+    - Dialogue1
     extraValues:
+    - 0
+    - 0
+    - False
     - 0
     - 0
     - False
     choices:
     - Dialouge
-    pos: {x: 323, y: 118}
+    pos: {x: 444, y: 420}
     subType: 0
     NodeType: 0
-    ConnectedNodes: ffffffff
+    ConnectedNodes: 01000000
     q_string1: 
     q_string2: 
     q_bool1: 0
     q_bool2: 0
     Tag: 
-  - name: SingleNode-ID:1
+  - name: InputNode-ID:1
     id: 1
-    dialogueText:
-    - Hello Friend What's your name ?
-    extraValues:
-    - 0
-    - 0
-    - False
-    choices:
-    - Dialouge
-    pos: {x: 539, y: 345}
-    subType: 0
-    NodeType: 0
-    ConnectedNodes: 02000000
-    q_string1: 
-    q_string2: 
-    q_bool1: 0
-    q_bool2: 0
-    Tag: 
-  - name: InputNode-ID:2
-    id: 2
     dialogueText: []
     extraValues:
     - string
     - 
     choices:
     - Dialouge
-    pos: {x: 813, y: 345}
+    pos: {x: 726, y: 420}
     subType: 14
     NodeType: 1
-    ConnectedNodes: 03000000
+    ConnectedNodes: 02000000
     q_string1: GameObject
-    q_string2: CharacterName
+    q_string2: Value
     q_bool1: 1
     q_bool2: 0
     Tag: 
-  - name: ScriptNode-ID:3
-    id: 3
+  - name: ActionNode-ID:2
+    id: 2
     dialogueText: []
+    extraValues:
+    - '{Name}'
+    choices:
+    - Dialogue
+    pos: {x: 1031, y: 420}
+    subType: 2
+    NodeType: 1
+    ConnectedNodes: 03000000
+    q_string1: GameObject
+    q_string2: AddKey
+    q_bool1: 0
+    q_bool2: 1
+    Tag: 
+  - name: SingleNode-ID:3
+    id: 3
+    dialogueText:
+    - Hello {Name}
     extraValues:
     - 0
     - 0
-    - 
-    choices: []
-    pos: {x: 1113, y: 345}
-    subType: 12
+    - False
+    choices:
+    - Dialouge
+    pos: {x: 1349, y: 420}
+    subType: 0
     NodeType: 0
     ConnectedNodes: ffffffff
-    q_string1: GameObject
-    q_string2: Greeting
+    q_string1: 
+    q_string2: 
     q_bool1: 0
     q_bool2: 0
     Tag: 

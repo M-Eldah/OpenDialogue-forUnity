@@ -96,6 +96,7 @@ public class OpenDialogueController : MonoBehaviour
 
     private void End()
     {
+        DialogueSystem.Save("Dialogue");
         //Ending the dialogue
         single.SetActive(false);
         multi.SetActive(false);
@@ -220,6 +221,8 @@ public class OpenDialogueController : MonoBehaviour
                 break;
 
             case TextType.InputNode:
+                multi.SetActive(false);
+                single.SetActive(false);
 
                 field.transform.parent.gameObject.SetActive(true);
                 break;

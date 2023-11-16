@@ -1,29 +1,33 @@
 {
-    "name": "Data",
+    "name": "2",
     "id": 1,
     "startIndex": 0,
     "Nodes": [
         {
-            "name": "InputNode-ID:0",
+            "name": "SingleNode-ID:0",
             "id": 0,
-            "dialogueText": [],
+            "dialogueText": [
+                "Dialogue0"
+            ],
             "extraValues": [
-                "float"
+                "0",
+                "0",
+                "False"
             ],
             "choices": [
                 "Dialouge"
             ],
             "pos": {
-                "x": 550.0,
-                "y": 120.0
+                "x": 323.0,
+                "y": 118.0
             },
-            "subType": 14,
-            "NodeType": 1,
+            "subType": 0,
+            "NodeType": 0,
             "ConnectedNodes": [
                 -1
             ],
-            "q_string1": "Text (TMP)",
-            "q_string2": "mesh",
+            "q_string1": "",
+            "q_string2": "",
             "q_bool1": false,
             "q_bool2": false,
             "Tag": ""

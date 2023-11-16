@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEngine;
 
 //The class for saving modification done to dialogue
 /// <summary>
@@ -18,11 +15,12 @@ public class DialogueRecord
     public bool startModified;
     public int startindex;
     public List<ModifiedRecord> changes;
-    public Dictionary<string, string> Variables;
+    public List<Vocab> Variables;
     public DialogueRecord(string name, int startindex)
     {
         title = name;
         changes= new List<ModifiedRecord>();
+        Variables = new List<Vocab>();
         this.startindex = startindex;
     }
     public void UpdateRecord(DialogueRecord record)
@@ -68,4 +66,15 @@ public class ModifiedRecord
         this.value = value;
     }
    
+}
+[Serializable]
+public class Vocab
+{
+    public string key;
+    public string value;
+    public Vocab(string key, string value)
+    {
+        this.key = key;
+        this.value = value;
+    }
 }

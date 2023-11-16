@@ -104,6 +104,10 @@ public class nodeData
 public class DialogueSave
 {
     public List<DialogueRecord> Choices;
+    public DialogueSave()
+    {
+        Choices = new List<DialogueRecord>();
+    }
 }
 
 public static class DialogueSystem
@@ -121,7 +125,6 @@ public static class DialogueSystem
     public static bool InDialogue;
     public static int currentindex;
     private static DialogueRecord Drecord;
-    private static DialogueSave dialogueSave;
     public static int CommentIndex;
 
     /// <summary>
@@ -371,11 +374,23 @@ public static class DialogueSystem
                 id = new characterId(int.Parse(Nodes[currentindex].extraValues[0]), int.Parse(Nodes[currentindex].extraValues[1]));
                 break;
         }
+        ChDiaoluge = ReplaceVocab(ChDiaoluge);
         nodeData nodedata = new nodeData(new Dialogue(ChDiaoluge, locked), id, Nodes[currentindex].Tag);
 
         return nodedata;
     }
-
+    private static string ReplaceVocab(string text) 
+    {
+        foreach(Vocab v in Drecord.Variables)
+        {
+            if(text.Contains(v.key))
+            {
+                Debug.Log(text.Replace(v.key, v.value));
+                text = text.Replace(v.key, v.value);
+            }
+        }
+        return text;
+    }
     /// <summary>
     /// Perform non-dialogue function
     /// </summary>
@@ -509,7 +524,7 @@ public static class DialogueSystem
                     Drecord.SetRecord(node, choice, Nodes[currentindex].q_bool2);
                 }
 
-                Save(data.Name);
+                Save(SaveName);
                 break;
 
             #endregion ChoiceUnlockNode
@@ -519,7 +534,7 @@ public static class DialogueSystem
             case SubType.StartChangeNode:
                 Drecord.startindex = int.Parse(Nodes[currentindex].q_string2);
                 Drecord.startModified = true;
-                Save(data.Name);
+                Save(SaveName);
                 break;
 
             #endregion StartChangeNode
@@ -860,7 +875,6 @@ public static class DialogueSystem
                 break;
 
             case SubType.ValueChoiceNode:
-                Debug.Log("Here2");
                 CheckModifiedData();
                 bool vtype = Nodes[currentindex].q_bool1;
                 GameObject gameObject = GameObject.Find(Nodes[currentindex].q_string1);
@@ -914,6 +928,18 @@ public static class DialogueSystem
         }
         return Unlocks;
     }
+    public static void UpdateVocab(string Key, string Value)
+    {
+        if(Drecord.Variables.FirstOrDefault(i=>i.key==Key)==null)
+        {
+            Drecord.Variables.Add(new Vocab(Key, Value));
+        }
+        else
+        {
+            Drecord.Variables.FirstOrDefault(i => i.key == Key).value= Value;
+        }
+    }
+
     private static void CheckModifiedData()
     {
         switch (Nodes[currentindex].subType)
@@ -969,21 +995,31 @@ public static class DialogueSystem
 #if UNITY_EDITOR
         savefile = $"Assets/OpenDialogue/DevSave/{SaveName}.json";
 #endif
-        dialogueSave.Choices.FirstOrDefault(i=>i.title==data.Name).UpdateRecord(Drecord);
-        string jsondata = JsonUtility.ToJson(dialogueSave);
+        DialogueSave s = Load(SaveName);
+        DialogueRecord r = s.Choices.FirstOrDefault(i => i.title == data.Name);
+        if(r==null)
+        {
+            s.Choices.Add(Drecord);
+        }
+        else
+        {
+            r.UpdateRecord(Drecord);
+        }
+        string jsondata = JsonUtility.ToJson(s);
         File.WriteAllText(savefile, jsondata);
     }
     //Load Dialogue Records to handle saves
     public static DialogueRecord LoadRecord(string DialougeName)
     {
-        DialogueRecord record = dialogueSave.Choices.FirstOrDefault(i => i.title == DialougeName);
+
+        DialogueRecord record = Load(SaveName).Choices.FirstOrDefault(i => i.title == DialougeName);
         if(record==null)
         {
             record = new DialogueRecord(data.Name, data.startIndex);
         }
         return record;
     }
-    public static void Load(string saveName)
+    public static DialogueSave Load(string saveName)
     {
         SaveName = saveName;
         string saveLocation = $"{Application.persistentDataPath}/{SaveName}.json";
@@ -995,7 +1031,10 @@ public static class DialogueSystem
         {
             //Debug.Log("FileLoaded");
             string JsonData = File.ReadAllText(saveLocation);
-            dialogueSave = JsonUtility.FromJson<DialogueSave>(JsonData);
+            return JsonUtility.FromJson<DialogueSave>(JsonData);
+        }else
+        {
+            return new DialogueSave();
         }
     }
     /// <summary>

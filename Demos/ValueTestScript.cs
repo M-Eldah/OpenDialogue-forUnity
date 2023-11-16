@@ -10,11 +10,15 @@ public class ValueTestScript : MonoBehaviour
 
     public int SetValue;
 
-    public string CharacterName;
+    public string Value;
     
 
     public string Greeting()
     {
-        return $"Hello {CharacterName} I hope you have a wonderful day";
+        return $"Hello {Value} I hope you have a wonderful day";
+    }
+    public void AddKey(string key)
+    {
+        DialogueSystem.UpdateVocab($"{key}", Value);
     }
 }
