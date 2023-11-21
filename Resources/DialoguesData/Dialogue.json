@@ -7,10 +7,14 @@
             "name": "SingleNode-ID:0",
             "id": 0,
             "dialogueText": [
-                "Dialogue0",
-                "Dialogue1"
+                "Hi",
+                "Welcome",
+                "What is your name?"
             ],
             "extraValues": [
+                "0",
+                "0",
+                "False",
                 "0",
                 "0",
                 "False",
@@ -91,7 +95,7 @@
             "name": "SingleNode-ID:3",
             "id": 3,
             "dialogueText": [
-                "Hello {Name}"
+                "How are you doing {Name}"
             ],
             "extraValues": [
                 "0",

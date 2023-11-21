@@ -68,6 +68,7 @@ public class OpenDialogueController : MonoBehaviour
 
     public Actor[] actors;
 
+    public bool ActorFromHandeler;
     private void Awake()
     {
         single.SetActive(false);
@@ -122,6 +123,10 @@ public class OpenDialogueController : MonoBehaviour
 
     public void StartDialogue()
     {
+        if(ActorFromHandeler)
+        {
+            actors=DialogueHandeler.actors;
+        }
         nodeData Node = DialogueSystem.DStart(DialogueHandeler.DialogueData, DialogueHandeler.ORSNode);
         if (Node != null)
         {
@@ -164,9 +169,16 @@ public class OpenDialogueController : MonoBehaviour
                 else
                 {
                     dialogueText.text = string.Empty;
-                    if (image != null && actors[Node.character.id].expression[Node.character.expression] != null)
+                    if (image != null)
                     {
-                        image.sprite = actors[Node.character.id].expression[Node.character.expression];
+                        if (actors[Node.character.id].expression.Length != 0 && actors[Node.character.id].expression[Node.character.expression] != null)
+                        {
+                            image.sprite = actors[Node.character.id].expression[Node.character.expression];
+                        }
+                        else
+                        {
+                            image.gameObject.SetActive(false);
+                        }
                     }
                     characterName.text = actors[Node.character.id].name;
                     if (animateText)
