@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class ValueTestScript : MonoBehaviour
 {
-    [SerializeField]
-    int randomValue;
-    public int RandomValue { get { return randomValue; } set { randomValue = value; } }
 
     public int SetValue;
 
@@ -16,6 +13,10 @@ public class ValueTestScript : MonoBehaviour
     public string Greeting()
     {
         return $"Hello {Value} I hope you have a wonderful day";
+    }
+    public void Greeting1(string Name)
+    {
+        Debug.Log($"Hello {Name} I hope you have a wonderful day");
     }
     public void AddKey(string key)
     {
