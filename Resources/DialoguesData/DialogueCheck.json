@@ -1,0 +1,160 @@
+{
+    "name": "DialogueCheck",
+    "id": 5,
+    "startIndex": 4,
+    "Nodes": [
+        {
+            "name": "BooleanChoiceNode-ID:0",
+            "id": 0,
+            "dialogueText": [
+                "ChoiceText1",
+                "ChoiceText2",
+                "ChoiceText3"
+            ],
+            "extraValues": [
+                "CheckTest",
+                "CheckTest",
+                "CheckTest"
+            ],
+            "choices": [
+                "2",
+                "1",
+                "2"
+            ],
+            "pos": {
+                "x": 735.0,
+                "y": 136.0
+            },
+            "subType": 15,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                1,
+                2,
+                3
+            ],
+            "q_string1": "GameObject",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:1",
+            "id": 1,
+            "dialogueText": [
+                "1"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1351.0,
+                "y": 100.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:2",
+            "id": 2,
+            "dialogueText": [
+                "2"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1351.0,
+                "y": 342.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:3",
+            "id": 3,
+            "dialogueText": [
+                "3"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1351.0,
+                "y": 584.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:4",
+            "id": 4,
+            "dialogueText": [
+                "Dialogue0"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 260.0,
+                "y": 204.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                0
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        }
+    ],
+    "Group": [],
+    "groudid": 0
+}

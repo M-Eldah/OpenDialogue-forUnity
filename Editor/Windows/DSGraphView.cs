@@ -139,6 +139,7 @@ namespace DSystem
             this.AddManipulator(CreateNodeContextualmenu("Add (RandomNode)", NodeType.DialogueNode, SubType.RandomNode));
             this.AddManipulator(CreateNodeContextualmenu("Add (ModifiedRandomNode)", NodeType.DialogueNode, SubType.MRandomNode));
             this.AddManipulator(CreateNodeContextualmenu("Add (ValueChoiceNode)", NodeType.DialogueNode, SubType.ValueChoiceNode));
+            this.AddManipulator(CreateNodeContextualmenu("Add (BolleanChoiceNode)", NodeType.DialogueNode, SubType.BooleanChoiceNode));
             this.AddManipulator(CreateNodeContextualmenu("Add (ValueDirectionNode)", NodeType.DialogueNode, SubType.ValueDirectionNode));
             this.AddManipulator(CreateNodeContextualmenu("Add (ScriptNode)", NodeType.DialogueNode, SubType.ScriptNode));
             this.AddManipulator(CreateNodeContextualmenu("Add (ActionNode)", NodeType.UtilityNode, SubType.ActionNode));

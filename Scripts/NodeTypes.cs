@@ -38,7 +38,8 @@ public enum SubType
     AnimationNode,
     ScriptNode,
     StageControlNode,
-    InputNode
+    InputNode,
+    BooleanChoiceNode
 }
 //How the node is displayed
 public enum TextType

@@ -154,6 +154,7 @@ public class OpenDialogueController : MonoBehaviour
 
     public void UpdatedialogueUi(nodeData Node)
     {
+        Debug.Log(Node.type);
         ClearChoices();
         switch (Node.type)
         {
@@ -194,11 +195,12 @@ public class OpenDialogueController : MonoBehaviour
                 break;
 
             case TextType.MultiNode:
+                Debug.Log("Here2");
                 multinode = true;
                 single.SetActive(false);
                 multi.SetActive(true);
                 choiceHolder.GetComponent<RectTransform>().sizeDelta =
-                new Vector2(0, Node.Choices.Count * 35 + (Node.Choices.Count - 1) * 8);
+                new Vector2(0, Node.Choices.Count * 40 + (Node.Choices.Count - 1) * 10);
                 for (int i = 0; i < Node.Choices.Count; i++)
                 {
                     if (Node.Choices[i].locked)

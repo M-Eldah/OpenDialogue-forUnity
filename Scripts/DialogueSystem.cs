@@ -82,7 +82,7 @@ public class nodeData
     {
         Tag = tag;
         Choices = dialogue;
-        type = subType == SubType.MultiNode ? TextType.MultiNode : TextType.MultiAltNode;
+        type = subType == SubType.MultiNode ? TextType.MultiNode : TextType.MultiNode;
     }
 
     public nodeData(Dialogue dialogue, List<Dialogue> choices, characterId character, bool pause, TextType type, string tag, AudioClip clip)
@@ -104,6 +104,7 @@ public class nodeData
 public class DialogueSave
 {
     public List<DialogueRecord> Choices;
+
     public DialogueSave()
     {
         Choices = new List<DialogueRecord>();
@@ -379,11 +380,12 @@ public static class DialogueSystem
 
         return nodedata;
     }
-    private static string ReplaceVocab(string text) 
+
+    private static string ReplaceVocab(string text)
     {
-        foreach(Vocab v in Drecord.Variables)
+        foreach (Vocab v in Drecord.Variables)
         {
-            if(text.Contains(v.key))
+            if (text.Contains(v.key))
             {
                 Debug.Log(text.Replace(v.key, v.value));
                 text = text.Replace(v.key, v.value);
@@ -391,6 +393,7 @@ public static class DialogueSystem
         }
         return text;
     }
+
     /// <summary>
     /// Perform non-dialogue function
     /// </summary>
@@ -539,10 +542,11 @@ public static class DialogueSystem
 
             #endregion StartChangeNode
 
+
             #region ValueDirectionNode
 
             case SubType.ValueDirectionNode:
-                Debug.Log("Here");
+                //Checks if method or value
                 bool check = bool.Parse(Nodes[currentindex].dialogueText[0]);
                 if (check)
                 {
@@ -593,30 +597,47 @@ public static class DialogueSystem
                     bool greater1 = Nodes[currentindex].q_bool2;
                     bool valuetype1 = Nodes[currentindex].q_bool1;
                     GameObject q_string1ect2 = GameObject.Find(Nodes[currentindex].q_string1);
-                    var Tan = (int)Value(q_string1ect2, Nodes[currentindex].q_string2, valuetype1);
-
-                    for (int i = 0; i < Nodes[currentindex].choices.Count; i++)
+                    var Tan = Value(q_string1ect2, Nodes[currentindex].q_string2, valuetype1);
+                    if (Tan.GetType() == typeof(bool))
                     {
-                        if (greater1)
+                        bool v = (bool)Tan;
+                        for (int i = 0; i < Nodes[currentindex].choices.Count; i++)
                         {
-                            if (float.Parse(Nodes[currentindex].choices[i]) <= Tan)
-                            {
-                                Nodes[currentindex].ConnectedNodes[0] = Nodes[currentindex].ConnectedNodes[i];
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            if (float.Parse(Nodes[currentindex].choices[i]) >= Tan)
+                            if (bool.Parse(Nodes[currentindex].choices[i]) == v)
                             {
                                 Nodes[currentindex].ConnectedNodes[0] = Nodes[currentindex].ConnectedNodes[i];
                                 break;
                             }
                         }
                     }
+                    else
+                    {
+                        Debug.Log(Tan);
+                        float v = booleanConvert(Tan);
+                        for (int i = 0; i < Nodes[currentindex].choices.Count; i++)
+                        {
+                            if (greater1)
+                            {
+                                if (float.Parse(Nodes[currentindex].choices[i]) <= v)
+                                {
+                                    Nodes[currentindex].ConnectedNodes[0] = Nodes[currentindex].ConnectedNodes[i];
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                if (float.Parse(Nodes[currentindex].choices[i]) >= v)
+                                {
+                                    Nodes[currentindex].ConnectedNodes[0] = Nodes[currentindex].ConnectedNodes[i];
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
 
                 break;
+
 
             #endregion ValueDirectionNode
 
@@ -923,20 +944,48 @@ public static class DialogueSystem
                         }
                     }
                 }
+                break;
+
+            case SubType.BooleanChoiceNode:
+                GameObject gameObject1 = GameObject.Find(Nodes[currentindex].q_string1);
+                for(int i =0; i<Nodes[currentindex].choices.Count; i++)
+                {
+                    bool check = false;
+                    MethodInfo m = GetMethod(gameObject1, Nodes[currentindex].extraValues[i]);
+                    ParameterInfo[] ps = m.GetParameters();
+                    string[] inputs = Nodes[currentindex].choices[i].Split(",");
+                    if (inputs.Length == 1)
+                    {
+                        var paramter = Convert.ChangeType(inputs[0], ps[0].ParameterType);
+                        check = (bool) m.Invoke(GetComponent(gameObject1, m), new object[] { paramter });
+                    }
+                    else
+                    {
+                        object[] objects = new object[ps.Count()];
+                        for (int v = 0; v < inputs.Length; v++)
+                        {
+                            objects[v] = Convert.ChangeType(inputs[v], ps[v].ParameterType);
+                        }
+                        check = (bool) m.Invoke(GetComponent(gameObject1, m), objects);
+                    }
+                    Debug.Log(check);
+                    Unlocks.Add(new(Nodes[currentindex].dialogueText[i], !check));
+                }
 
                 break;
         }
         return Unlocks;
     }
+
     public static void UpdateVocab(string Key, string Value)
     {
-        if(Drecord.Variables.FirstOrDefault(i=>i.key==Key)==null)
+        if (Drecord.Variables.FirstOrDefault(i => i.key == Key) == null)
         {
             Drecord.Variables.Add(new Vocab(Key, Value));
         }
         else
         {
-            Drecord.Variables.FirstOrDefault(i => i.key == Key).value= Value;
+            Drecord.Variables.FirstOrDefault(i => i.key == Key).value = Value;
         }
     }
 
@@ -973,6 +1022,7 @@ public static class DialogueSystem
                 break;
         }
     }
+
     public static DialogueData loadDialogue(string name)
     {
         var savefile = Resources.Load<TextAsset>($"DialoguesData/{name}");
@@ -987,7 +1037,9 @@ public static class DialogueSystem
             return null;
         }
     }
+
     public static string SaveName { get; set; }
+
     public static void Save(string saveName)
     {
         SaveName = saveName;
@@ -997,7 +1049,7 @@ public static class DialogueSystem
 #endif
         DialogueSave s = Load(SaveName);
         DialogueRecord r = s.Choices.FirstOrDefault(i => i.title == data.Name);
-        if(r==null)
+        if (r == null)
         {
             s.Choices.Add(Drecord);
         }
@@ -1008,17 +1060,18 @@ public static class DialogueSystem
         string jsondata = JsonUtility.ToJson(s);
         File.WriteAllText(savefile, jsondata);
     }
+
     //Load Dialogue Records to handle saves
     public static DialogueRecord LoadRecord(string DialougeName)
     {
-
         DialogueRecord record = Load(SaveName).Choices.FirstOrDefault(i => i.title == DialougeName);
-        if(record==null)
+        if (record == null)
         {
             record = new DialogueRecord(data.Name, data.startIndex);
         }
         return record;
     }
+
     public static DialogueSave Load(string saveName)
     {
         SaveName = saveName;
@@ -1032,11 +1085,13 @@ public static class DialogueSystem
             //Debug.Log("FileLoaded");
             string JsonData = File.ReadAllText(saveLocation);
             return JsonUtility.FromJson<DialogueSave>(JsonData);
-        }else
+        }
+        else
         {
             return new DialogueSave();
         }
     }
+
     /// <summary>
     /// Turning List to Dictionary
     /// </summary>
@@ -1050,5 +1105,18 @@ public static class DialogueSystem
             nodeD.Add(n.id, n);
         }
         return nodeD;
+    }
+    private static float booleanConvert(object o)
+    {
+        float value;
+        if (o.GetType() == typeof(bool))
+        {
+            value = (bool)o ? 1 : 0;
+        }
+        else
+        {
+            value = Convert.ToSingle(o);
+        }
+        return value;
     }
 }

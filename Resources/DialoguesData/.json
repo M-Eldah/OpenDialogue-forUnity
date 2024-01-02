@@ -4,28 +4,37 @@
     "startIndex": 0,
     "Nodes": [
         {
-            "name": "InputNode-ID:0",
+            "name": "BooleanChoiceNode-ID:0",
             "id": 0,
-            "dialogueText": [],
+            "dialogueText": [
+                "ChoiceText",
+                "ChoiceText",
+                "ChoiceText"
+            ],
             "extraValues": [
-                "int",
-                "[1-9]"
+                "",
+                "",
+                ""
             ],
             "choices": [
-                "Dialouge"
+                "AlternativeText",
+                "AlternativeText",
+                "AlternativeText"
             ],
             "pos": {
-                "x": 550.0,
-                "y": 120.0
+                "x": 842.0,
+                "y": 199.0
             },
-            "subType": 14,
-            "NodeType": 1,
+            "subType": 15,
+            "NodeType": 0,
             "ConnectedNodes": [
+                -1,
+                -1,
                 -1
             ],
-            "q_string1": "UiExamplePrefab",
-            "q_string2": "dialogueText",
-            "q_bool1": true,
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
             "q_bool2": false,
             "Tag": ""
         }

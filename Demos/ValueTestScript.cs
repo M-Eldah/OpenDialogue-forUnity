@@ -22,4 +22,10 @@ public class ValueTestScript : MonoBehaviour
     {
         DialogueSystem.UpdateVocab($"{key}", Value);
     }
+
+    public bool CheckTest(int i)
+    {
+        return i == 2;
+        
+    }
 }

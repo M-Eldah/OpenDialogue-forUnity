@@ -265,6 +265,7 @@ namespace DSystem.Elements
             {
                 List<Edge> edges = new List<Edge>(port.port.connections);
                 BaseNode node = (BaseNode)edges[0].input.node;
+                Debug.Log(port.index);
                 data.ConnectedNodes[port.index]=node.data.id;
             }
         }
