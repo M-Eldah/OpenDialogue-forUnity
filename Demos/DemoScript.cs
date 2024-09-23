@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using OpenDialouge;
 public class DemoScript : MonoBehaviour
 {
     // Start is called before the first frame update

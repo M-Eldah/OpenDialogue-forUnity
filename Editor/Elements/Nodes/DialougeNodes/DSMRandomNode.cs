@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System.Reflection;
     using UnityEngine.UIElements;
     using utilities;
-
+    /// <summary>
+    /// Random dialouge return, however the random range can be modified by a value
+    /// </summary>
     public class DSMRandomNode : DialogueNode
     {
         public Port Choice;
@@ -29,50 +31,42 @@ namespace DSystem.Elements
         {
             base.DrawSingle();
 
-            DropdownField dropdownmethods = DSElementUtilities.CreateDropDownMenu("Properties",
+            DropdownField dropDownIdnetifier = ODtoolsElementUtilities.CreateDropDownMenu("Value Name",
             evt =>
             {
                 data.q_string2 = evt.newValue;
             });
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v =>
+            DropdownField dropDownObjects = ODtoolsElementUtilities.CreateDropDownMenu("Objects", v =>
             {
                 data.q_string1 = v.newValue;
                 GameObject gameObject = GameObject.Find(v.newValue);
                 if (gameObject != null)
                 {
-                    dropdownmethods.choices.Clear();
+                    dropDownIdnetifier.choices.Clear();
                     if (!data.q_bool1)
                     {
-                        List<PropertyInfo> methodz = UtilityFunctions.GetProperties(gameObject);
-                        foreach (PropertyInfo method in methodz)
-                        {
-                            dropdownmethods.choices.Add(method.Name);
-                        }
+                        dropDownIdnetifier.choices.AddRange(UtilityFunctions.GetPropertiesNames(gameObject));
                     }
                     else
                     {
-                        List<FieldInfo> methodz = UtilityFunctions.GetFields(gameObject);
-                        foreach (FieldInfo method in methodz)
-                        {
-                            dropdownmethods.choices.Add(method.Name);
-                        }
+                        dropDownIdnetifier.choices.AddRange(UtilityFunctions.GetFieldNames(gameObject));
                     }
                 }
             }
             );
-            DropdownField DataType = DSElementUtilities.CreateDropDownMenu("DataType", v =>
+            DropdownField DataType = ODtoolsElementUtilities.CreateDropDownMenu("DataType", v =>
             {
                 data.q_bool1 = v.newValue == "Field";
                 var objects = Resources.FindObjectsOfTypeAll<GameObject>();
-                dropdownobjects.choices.Clear();
-                dropdownmethods.choices.Clear();
+                dropDownObjects.choices.Clear();
+                dropDownIdnetifier.choices.Clear();
                 if (data.q_bool1)
                 {
                     foreach (GameObject obj in objects)
                     {
                         if (UtilityFunctions.GetFields(obj).Count != 0)
                         {
-                            dropdownobjects.choices.Add(obj.name);
+                            dropDownObjects.choices.Add(obj.name);
                         }
                     }
                 }
@@ -82,32 +76,24 @@ namespace DSystem.Elements
                     {
                         if (UtilityFunctions.GetProperties(obj).Count != 0)
                         {
-                            dropdownobjects.choices.Add(obj.name);
+                            dropDownObjects.choices.Add(obj.name);
                         }
                     }
                 }
-                if (dropdownobjects.value != "")
+                if (dropDownObjects.value != "")
                 {
-                    dropdownmethods.value = "";
-                    GameObject gameObject = GameObject.Find(dropdownobjects.value);
+                    dropDownIdnetifier.value = "";
+                    GameObject gameObject = GameObject.Find(dropDownObjects.value);
                     if (gameObject != null)
                     {
-                        dropdownmethods.choices.Clear();
+                        dropDownIdnetifier.choices.Clear();
                         if (!data.q_bool1)
                         {
-                            List<PropertyInfo> methodz = UtilityFunctions.GetProperties(gameObject);
-                            foreach (PropertyInfo method in methodz)
-                            {
-                                dropdownmethods.choices.Add(method.Name);
-                            }
+                            dropDownIdnetifier.choices.AddRange(UtilityFunctions.GetPropertiesNames(gameObject));
                         }
                         else
                         {
-                            List<FieldInfo> methodz = UtilityFunctions.GetFields(gameObject);
-                            foreach (FieldInfo method in methodz)
-                            {
-                                dropdownmethods.choices.Add(method.Name);
-                            }
+                            dropDownIdnetifier.choices.AddRange(UtilityFunctions.GetFieldNames(gameObject));
                         }
                     }
                 }
@@ -124,7 +110,7 @@ namespace DSystem.Elements
                 {
                     if (UtilityFunctions.GetFields(obj).Count != 0)
                     {
-                        dropdownobjects.choices.Add(obj.name);
+                        dropDownObjects.choices.Add(obj.name);
                     }
                 }
             }
@@ -134,11 +120,11 @@ namespace DSystem.Elements
                 {
                     if (UtilityFunctions.GetProperties(obj).Count != 0)
                     {
-                        dropdownobjects.choices.Add(obj.name);
+                        dropDownObjects.choices.Add(obj.name);
                     }
                 }
             }
-            Toggle Direction = DSElementUtilities.CreateToggle("Greater");
+            Toggle Direction = ODtoolsElementUtilities.CreateToggle("Greater");
             Direction.tooltip = "Do you want to pass values that are greater than or equal ?";
             Direction.RegisterValueChangedCallback(evt =>
             {
@@ -146,19 +132,19 @@ namespace DSystem.Elements
             }
             );
 
-            Foldout extradata = DSElementUtilities.CreateFoldout("ValueData", false);
+            Foldout extradata = ODtoolsElementUtilities.CreateFoldout("ValueData", false);
             extensionContainer.Insert(0, extradata);
             extradata.Insert(0, DataType);
             extradata.Insert(1, Direction);
-            extradata.Insert(2, dropdownobjects);
-            extradata.Insert(3, dropdownmethods);
+            extradata.Insert(2, dropDownObjects);
+            extradata.Insert(3, dropDownIdnetifier);
             //Checking Data to fill Ui
             if (data.q_string1 != null)
             {
                 DataType.value = data.q_bool1 ? "Field" : "Property";
                 Direction.value = data.q_bool2;
-                dropdownobjects.value = data.q_string1;
-                dropdownmethods.value = data.q_string2;
+                dropDownObjects.value = data.q_string1;
+                dropDownIdnetifier.value = data.q_string2;
             }
             RefreshExpandedState();
         }

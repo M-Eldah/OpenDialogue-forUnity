@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Reflection;
 using UnityEngine.UIElements;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using utilities;
 
@@ -32,11 +32,11 @@ namespace DSystem.Elements
             base.Draw();
             VisualElement customDataContainer = new VisualElement();
 
-            methods = DSElementUtilities.CreateDropDownMenu("Properties", v =>
+            methods = ODtoolsElementUtilities.CreateDropDownMenu("Value", v =>
             {
                 data.q_string2 = v.newValue;
             });
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v =>
+            DropdownField dropDownObjects = ODtoolsElementUtilities.CreateDropDownMenu("Objects", v =>
             {
                 data.q_string1 = v.newValue;
                 FieldMenu();
@@ -44,34 +44,34 @@ namespace DSystem.Elements
             );
             var objects = Resources.FindObjectsOfTypeAll<GameObject>();
 
-            DropdownField type = DSElementUtilities.CreateDropDownMenu("Type", evt =>
+            DropdownField type = ODtoolsElementUtilities.CreateDropDownMenu("Type", evt =>
             {
                 data.q_bool1 = evt.newValue == "Field";
-                FillGameObjectMenu(dropdownobjects, objects);
+                FillGameObjectMenu(dropDownObjects, objects);
                 FieldMenu();
             }, new string[] { "Field", "Property" }
             );
-            DropdownField OpertationType = DSElementUtilities.CreateDropDownMenu("OperationType", evt =>
+            DropdownField OpertationType = ODtoolsElementUtilities.CreateDropDownMenu("OperationType", evt =>
             {
                 data.q_bool2 = evt.newValue == "Modify";
             }, new string[] { "Modify", "Set" }
             );
 
-            TextField textField = DSElementUtilities.CreateTextField("Value", v => { data.extraValues[0] = v.newValue; });
-            Foldout textfoldout = DSElementUtilities.CreateFoldout("Data", false);
+            TextField textField = ODtoolsElementUtilities.CreateTextField("Value", v => { data.extraValues[0] = v.newValue; });
+            Foldout textfoldout = ODtoolsElementUtilities.CreateFoldout("Data", false);
             if (data.q_string1 != null)
             {
-                dropdownobjects.value = data.q_string1;
+                dropDownObjects.value = data.q_string1;
                 methods.value = data.q_string2;
                 textField.value = data.extraValues[0] == "" ? "Parameters" : data.extraValues[0];
                 type.value = data.q_bool1 ? "Field" : "Property";
                 OpertationType.value = data.q_bool2 ? "Modify" : "Set";
-                FillGameObjectMenu(dropdownobjects, objects);
+                FillGameObjectMenu(dropDownObjects, objects);
                 FieldMenu();
             }
             textfoldout.Add(type);
             textfoldout.Add(OpertationType);
-            textfoldout.Add(dropdownobjects);
+            textfoldout.Add(dropDownObjects);
             textfoldout.Add(methods);
             textfoldout.Add(textField);
             customDataContainer.Add(textfoldout);

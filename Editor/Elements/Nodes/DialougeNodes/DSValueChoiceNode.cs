@@ -3,12 +3,14 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System.Linq;
     using System.Reflection;
     using utilities;
-
+    /// <summary>
+    /// Compares a list of value with a value returned from a method and shows if they pass a value check
+    /// </summary>
     public class DSValueChoiceNode : DialogueNode
     {
         private List<string> valueName;
@@ -33,7 +35,7 @@ namespace DSystem.Elements
             //Main Container
             base.Draw(true, "Value");
             
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v =>
+            DropdownField dropDownObject = ODtoolsElementUtilities.CreateDropDownMenu("Objects", v =>
             {
                 data.q_string1 = v.newValue;
                 AddValueNames(v.newValue);
@@ -47,7 +49,7 @@ namespace DSystem.Elements
                 {
                     if (UtilityFunctions.GetFields(obj).Count != 0)
                     {
-                        dropdownobjects.choices.Add(obj.name);
+                        dropDownObject.choices.Add(obj.name);
                     }
                 }
             }
@@ -57,16 +59,16 @@ namespace DSystem.Elements
                 {
                     if (UtilityFunctions.GetProperties(obj).Count != 0)
                     {
-                        dropdownobjects.choices.Add(obj.name);
+                        dropDownObject.choices.Add(obj.name);
                     }
                 }
             }
             
 
-            DropdownField DataType = DSElementUtilities.CreateDropDownMenu("DataType",
+            DropdownField DataType = ODtoolsElementUtilities.CreateDropDownMenu("DataType",
                 v =>{
                     data.q_bool1 = v.newValue == "Field";
-                    dropdownobjects.choices.Clear();
+                    dropDownObject.choices.Clear();
                     var objects = Resources.FindObjectsOfTypeAll<GameObject>();
 
                     if (data.q_bool1)
@@ -75,7 +77,7 @@ namespace DSystem.Elements
                         {
                             if (UtilityFunctions.GetFields(obj).Count != 0)
                             {
-                                dropdownobjects.choices.Add(obj.name);
+                                dropDownObject.choices.Add(obj.name);
                             }
                         }
                     }
@@ -85,7 +87,7 @@ namespace DSystem.Elements
                         {
                             if (UtilityFunctions.GetProperties(obj).Count != 0)
                             {
-                                dropdownobjects.choices.Add(obj.name);
+                                dropDownObject.choices.Add(obj.name);
                             }
                         }
                     }
@@ -93,10 +95,10 @@ namespace DSystem.Elements
                 }
                 ,new string[] {"Field","Property"});
             textfoldout.Add(DataType);
-            textfoldout.Add(dropdownobjects);
+            textfoldout.Add(dropDownObject);
             
 
-            Button addchoice = DSElementUtilities.CreateButton("Add Choice", () =>
+            Button addchoice = ODtoolsElementUtilities.CreateButton("Add Choice", () =>
             {
                 int X = data.choices.Count - 1;
                 data.dialogueText.Add(data.dialogueText[X]);
@@ -120,7 +122,7 @@ namespace DSystem.Elements
             else
             {
                 DataType.value = data.q_bool1 ? "Field" : "Property";
-                dropdownobjects.value = data.q_string1;
+                dropDownObject.value = data.q_string1;
                 for (int i = 0; i < data.choices.Count; i++)
                 {
                     CreateChoice(i,i*4);
@@ -138,18 +140,14 @@ namespace DSystem.Elements
                 valueName.Clear();
                 if (!data.q_bool1)
                 {
-                    List<PropertyInfo> methodz = UtilityFunctions.GetProperties(gameObject);
-                    foreach (PropertyInfo method in methodz)
-                    {
-                        valueName.Add(method.Name);
-                    }
+                    valueName.AddRange(UtilityFunctions.GetPropertiesNames(gameObject));
                 }
                 else
                 {
                     List<FieldInfo> methodz = UtilityFunctions.GetFields(gameObject);
                     foreach (FieldInfo method in methodz)
                     {
-                        valueName.Add(method.Name);
+                        valueName.AddRange(UtilityFunctions.GetFieldNames(gameObject));
                     }
                 }
             }
@@ -163,23 +161,23 @@ namespace DSystem.Elements
            
             //the port
             Port Choice = this.CreatePort("", Orientation.Horizontal, Direction.Output, Port.Capacity.Single);
-            Choice.RegisterCallback<MouseUpEvent, PortPass>(portcheck, new PortPass(Choice, Getindex(Choice), data.id));
+            Choice.RegisterCallback<MouseUpEvent, PortPass>(Portcheck, new PortPass(Choice, Getindex(Choice), data.id));
             Choice.portName = $"Output"; output.Add(Choice);
             data.ConnectedNodes.Add(-1);
             //Choice Text
-            TextField choiceTextfield = DSElementUtilities.CreateTextField("Choice Text", evt =>
+            TextField choiceTextfield = ODtoolsElementUtilities.CreateTextField("Choice Text", evt =>
             {
                 int indeX = Getindex(Choice);
                 data.dialogueText[indeX] = evt.newValue;
             },  KeyboardCombo); 
             //Choice Alternative
-            TextField alternative = DSElementUtilities.CreateTextField("Alternative", evt =>
+            TextField alternative = ODtoolsElementUtilities.CreateTextField("Alternative", evt =>
             {
                 int indeX = Getindex(Choice);
                 data.choices[indeX] = evt.newValue;
             },  KeyboardCombo);
             //Greater Than toggle
-            Toggle direction = DSElementUtilities.CreateToggle("");
+            Toggle direction = ODtoolsElementUtilities.CreateToggle("");
             direction.tooltip = "GreaterThan or equal to value";
             direction.RegisterValueChangedCallback(evt =>
             {
@@ -188,7 +186,7 @@ namespace DSystem.Elements
             }
             );
             //SkipToggle
-            Toggle skip = DSElementUtilities.CreateToggle("");
+            Toggle skip = ODtoolsElementUtilities.CreateToggle("");
             skip.tooltip = "Skip this choice";
             skip.RegisterValueChangedCallback(evt =>
             {
@@ -197,7 +195,7 @@ namespace DSystem.Elements
             }
             );
             //PropertyName
-            DropdownField dropdownmethods = DSElementUtilities.CreateDropDownMenu("     ",
+            DropdownField dropdownmethods = ODtoolsElementUtilities.CreateDropDownMenu("     ",
             evt =>
             {
                 int indeX = Getindex(Choice);
@@ -209,7 +207,7 @@ namespace DSystem.Elements
                 dropdownmethods.choices.AddRange(valueName);
             }
             //The Value
-            TextField ValueText = DSElementUtilities.CreateTextField(data.extraValues[id], evt =>
+            TextField ValueText = ODtoolsElementUtilities.CreateTextField(data.extraValues[id], evt =>
             {
                 int indeX = Getindex(Choice);
                 data.extraValues[eid + 3] = evt.newValue;
@@ -238,7 +236,7 @@ namespace DSystem.Elements
            
 
             //the fetus deletus
-            Button DeleteChoice = DSElementUtilities.CreateButton("X", () =>
+            Button DeleteChoice = ODtoolsElementUtilities.CreateButton("X", () =>
             {
                 if (data.choices.Count == 1)
                 {

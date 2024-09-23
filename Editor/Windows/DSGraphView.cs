@@ -6,9 +6,9 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem
+namespace OpenDialouge
 {
-    using DSystem.Windows;
+    using OpenDialouge.Windows;
     using Elements;
     using UnityEngine.Events;
 
@@ -184,7 +184,7 @@ namespace DSystem
                 title = Title
                 
             };
-            group.data.GName = Title;
+            group.data.GroupName = Title;
             group.SetPosition(new Rect(vector2, Vector2.zero));
             foreach (GraphElement selected in selection)
             {
@@ -222,7 +222,7 @@ namespace DSystem
             {
                 case NodeType.DialogueNode:
                     Undo.RecordObject(container, $"Creating {subType}");
-                    Type nodeType = Type.GetType($"DSystem.Elements.DS{subType}");
+                    Type nodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
                     DialogueNode node = (DialogueNode)Activator.CreateInstance(nodeType);
                     node.title = $"{subType}-ID:{data.id}";
                     node.data.name = node.title;
@@ -260,7 +260,7 @@ namespace DSystem
 
                 case NodeType.UtilityNode:
                     Undo.RecordObject(container, $"Creating {subType}");
-                    Type UtilitynodeType = Type.GetType($"DSystem.Elements.DS{subType}");
+                    Type UtilitynodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
                     UtilityNode Utilitynode = (UtilityNode)Activator.CreateInstance(UtilitynodeType);
                     Utilitynode.title = $"{subType}-ID:{data.id}";
                     Utilitynode.data.name = Utilitynode.title;
@@ -296,7 +296,7 @@ namespace DSystem
         public void loadNode(Vector2 _pos, NodeDB db, bool addtodata = false)
         {
             SubType subType = db.subType;
-            Type nodeType = Type.GetType($"DSystem.Elements.DS{subType}");
+            Type nodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
             switch (db.NodeType)
             {
                 case NodeType.DialogueNode:
@@ -335,7 +335,7 @@ namespace DSystem
         public void QuickLoad(Vector2 _pos, NodeDB db, bool addtodata = false)
         {
             SubType subType = db.subType;
-            Type nodeType = Type.GetType($"DSystem.Elements.DS{subType}");
+            Type nodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
 
             switch (subType)
             {
@@ -489,7 +489,7 @@ namespace DSystem
             {
                 title = name
             };
-            group.data.GName = name;
+            group.data.GroupName = name;
             group.SetPosition(new Rect(pos, Vector2.zero));
             foreach (int node in nodes)
             {
@@ -651,7 +651,7 @@ namespace DSystem
                 {
                     data.Nodes.Remove(Node.data);
                     Nodes.Remove(Node.data.id);
-                    DeletedEdges.AddRange(Node.DisconnectPorts());
+                    DeletedEdges.AddRange(Node.Edges());
                 }
                 DeleteElements(DeletedNodes);
                 DeleteElements(DeletedGroups);
@@ -723,7 +723,7 @@ namespace DSystem
             groups.AddRange(dialogue.Group);
             foreach (GroupsDB groupDB in groups)
             {
-                loadGroup(groupDB.GName, groupDB.Position, groupDB.ContainedNodes);
+                loadGroup(groupDB.GroupName, groupDB.Position, groupDB.ContainedNodes);
             }
         }
 

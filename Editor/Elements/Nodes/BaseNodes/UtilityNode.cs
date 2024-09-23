@@ -2,11 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System.Linq;
     using UnityEditor.Experimental.GraphView;
     using utilities;
+    /// <summary>
+    /// The Parent class for all Utility Nodes
+    /// </summary>
     public class UtilityNode : BaseNode
     {
         public override void Initialize(Vector2 Pos, DSGraphView graph)

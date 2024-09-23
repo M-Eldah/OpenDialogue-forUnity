@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System.Reflection;
     using UnityEditor.Experimental.GraphView;
@@ -15,7 +15,6 @@ namespace DSystem.Elements
             base.Initialize(Pos,graph,1);
             data.subType = SubType.ActionNode;
             AddToClassList("ActionNode");
-            data.choices.Add("Dialogue");
         }
 
         public override void Initialize(Vector2 Pos, DSGraphView graph, NodeDB db)
@@ -29,21 +28,17 @@ namespace DSystem.Elements
             VisualElement customDataContainer = new VisualElement();
 
 
-            DropdownField dropdownmethods = DSElementUtilities.CreateDropDownMenu("Methods", v =>
+            DropdownField dropDownMethods = ODtoolsElementUtilities.CreateDropDownMenu("Methods", v =>
             {
                 data.q_string2 = v.newValue;
             });
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v => {
+            DropdownField dropDownObjects = ODtoolsElementUtilities.CreateDropDownMenu("Objects", v => {
                 data.q_string1 = v.newValue;
                 GameObject gameObject = GameObject.Find(v.newValue);
                 if (gameObject != null)
                 {
-                    dropdownmethods.choices.Clear();
-                    List<MethodInfo> methodz = UtilityFunctions.GetMethods(gameObject);
-                    foreach (MethodInfo method in methodz)
-                    {
-                        dropdownmethods.choices.Add(method.Name);
-                    }
+                    dropDownMethods.choices.Clear();
+                    dropDownMethods.choices.AddRange(UtilityFunctions.GetMethodsNames(gameObject));
                 }
             }
             );
@@ -52,26 +47,26 @@ namespace DSystem.Elements
             {
                 List<MethodInfo> methodz = UtilityFunctions.GetMethods(obj);
                 if (methodz.Count != 0)
-                { dropdownobjects.choices.Add(obj.name); }
+                { dropDownObjects.choices.Add(obj.name); }
             }
-            Toggle toggle = DSElementUtilities.CreateToggle("Pause Here", v =>
+            Toggle toggle = ODtoolsElementUtilities.CreateToggle("Pause Here", v =>
             {
                 data.q_bool1 = v.newValue;
             });
-            TextField textField = DSElementUtilities.CreateTextField("Parameters", v => { data.extraValues[0] = v.newValue; data.q_bool2 = data.extraValues[0] == "" ? false : true; }) ;
-            Foldout textfoldout = DSElementUtilities.CreateFoldout("Data", false);
+            TextField textField = ODtoolsElementUtilities.CreateTextField("Parameters", v => { data.extraValues[0] = v.newValue; data.q_bool2 = data.extraValues[0] == "" ? false : true; }) ;
+            Foldout textfoldout = ODtoolsElementUtilities.CreateFoldout("Data", false);
             if(data.q_string1 !=null)
             {
-                dropdownobjects.value= data.q_string1;
-                dropdownmethods.value = data.q_string2;
+                dropDownObjects.value= data.q_string1;
+                dropDownMethods.value = data.q_string2;
                 textField.value = data.extraValues[0]==""? "Parameters": data.extraValues[0];
                 //Checking if it has extra Porperties
                 data.q_bool2 = data.extraValues[0] == "" ? false : true;
                 toggle.value = data.q_bool1;
             }
         
-            textfoldout.Add(dropdownobjects);
-            textfoldout.Add(dropdownmethods);
+            textfoldout.Add(dropDownObjects);
+            textfoldout.Add(dropDownMethods);
             textfoldout.Add(textField);
             textfoldout.Add(toggle);
             customDataContainer.Add(textfoldout);

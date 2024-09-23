@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System.IO;
     using System.Linq;
@@ -31,7 +31,7 @@ namespace DSystem.Elements
             {
                 data.extraValues.Add("");
             }
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v => {
+            DropdownField dropDownObjects = ODtoolsElementUtilities.CreateDropDownMenu("Objects", v => {
                 data.q_string1 = v.newValue;
             }
             );
@@ -40,25 +40,25 @@ namespace DSystem.Elements
             foreach (string d in Dialouges.ToArray())
             {
                 string name = d.Split("\\")[4];
-                dropdownobjects.choices.Add(name);
+                dropDownObjects.choices.Add(name);
             }
-            Toggle toggle = DSElementUtilities.CreateToggle("Lock", v =>
+            Toggle toggle = ODtoolsElementUtilities.CreateToggle("Lock", v =>
             {
                 data.q_bool2 = v.newValue;
             });
-            Toggle Type = DSElementUtilities.CreateToggle("Multinode", v =>
+            Toggle Type = ODtoolsElementUtilities.CreateToggle("Multinode", v =>
             {
                 data.q_bool1 = v.newValue;
             });
-            TextField textField = DSElementUtilities.CreateTextField("Node", v =>     { data.q_string2 = v.newValue;});
-            TextField textField2 = DSElementUtilities.CreateTextField("Value", v => { data.extraValues[0] = v.newValue; });
+            TextField textField = ODtoolsElementUtilities.CreateTextField("Node", v =>     { data.q_string2 = v.newValue;});
+            TextField textField2 = ODtoolsElementUtilities.CreateTextField("Value", v => { data.extraValues[0] = v.newValue; });
             textField2.label = "From [Inclusive]";
-            TextField textField3 = DSElementUtilities.CreateTextField("Value", v => { data.extraValues[1] = v.newValue; });
+            TextField textField3 = ODtoolsElementUtilities.CreateTextField("Value", v => { data.extraValues[1] = v.newValue; });
             textField3.label = "To [Exclusive]";
-            Foldout textfoldout = DSElementUtilities.CreateFoldout("Data", false);
+            Foldout textfoldout = ODtoolsElementUtilities.CreateFoldout("Data", false);
             if (data.q_string1 != null)
             {
-                dropdownobjects.value = data.q_string1;
+                dropDownObjects.value = data.q_string1;
                 textField.value = data.q_string2 == "" ? "Node" : data.q_string2;
                 textField2.value = data.extraValues[0] == "" ? "Value" : data.extraValues[0];
                 textField3.value = data.extraValues[1] == "" ? "Value" : data.extraValues[1];
@@ -66,7 +66,7 @@ namespace DSystem.Elements
                 Type.value = data.q_bool1;
             }
             textfoldout.Add(Type);
-            textfoldout.Add(dropdownobjects);
+            textfoldout.Add(dropDownObjects);
             textfoldout.Add(textField);
             textfoldout.Add(textField2);
             textfoldout.Add(textField3);

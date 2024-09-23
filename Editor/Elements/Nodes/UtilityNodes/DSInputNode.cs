@@ -1,10 +1,10 @@
-using DSystem.utilities;
+using OpenDialouge.utilities;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     public class DSInputNode : UtilityNode
     {
@@ -30,11 +30,11 @@ namespace DSystem.Elements
             base.Draw();
             VisualElement customDataContainer = new VisualElement();
 
-            methods = DSElementUtilities.CreateDropDownMenu("Properties", v =>
+            methods = ODtoolsElementUtilities.CreateDropDownMenu("Properties", v =>
             {
                 data.q_string2 = v.newValue;
             });
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v =>
+            DropdownField dropDownObjects = ODtoolsElementUtilities.CreateDropDownMenu("Objects", v =>
             {
                 data.q_string1 = v.newValue;
                 FieldMenu();
@@ -42,36 +42,36 @@ namespace DSystem.Elements
             );
             var objects = Resources.FindObjectsOfTypeAll<GameObject>();
 
-            DropdownField type = DSElementUtilities.CreateDropDownMenu("Type", evt =>
+            DropdownField type = ODtoolsElementUtilities.CreateDropDownMenu("Type", evt =>
             {
                 data.q_bool1 = evt.newValue == "Field";
-                FillGameObjectMenu(dropdownobjects, objects);
+                FillGameObjectMenu(dropDownObjects, objects);
                 FieldMenu();
             }, new string[] { "Field", "Property" }
             );
-            DropdownField OpertationType = DSElementUtilities.CreateDropDownMenu("OperationType", evt =>
+            DropdownField OpertationType = ODtoolsElementUtilities.CreateDropDownMenu("OperationType", evt =>
             {
                 data.extraValues[0] = evt.newValue;
             }, new string[] { "float", "int","bool","string" }
             );
-            TextField optionalRegEx = DSElementUtilities.CreateTextField("New Regex",
+            TextField optionalRegEx = ODtoolsElementUtilities.CreateTextField("New Regex",
                 evt => { data.extraValues[1] = evt.newValue; }
                 );
-            Foldout textfoldout = DSElementUtilities.CreateFoldout("Data", false);
+            Foldout textfoldout = ODtoolsElementUtilities.CreateFoldout("Data", false);
             if (data.q_string1 != null)
             {
-                dropdownobjects.value = data.q_string1;
+                dropDownObjects.value = data.q_string1;
                 methods.value = data.q_string2;
                 type.value = data.q_bool1 ? "Field" : "Property";
                 OpertationType.value = data.extraValues[0];
                 optionalRegEx.value = data.extraValues[1];
 
-                FillGameObjectMenu(dropdownobjects, objects);
+                FillGameObjectMenu(dropDownObjects, objects);
                 FieldMenu();
             }
             textfoldout.Add(type);
             textfoldout.Add(OpertationType);
-            textfoldout.Add(dropdownobjects);
+            textfoldout.Add(dropDownObjects);
             textfoldout.Add(optionalRegEx);
             textfoldout.Add(methods);
             customDataContainer.Add(textfoldout);

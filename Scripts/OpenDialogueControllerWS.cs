@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using OpenDialouge;
 /// <summary>
 /// The Main class we use to interact with dialogue, you can use it or make your own
 /// </summary>

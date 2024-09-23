@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using UnityEngine.UIElements;
     using utilities;
@@ -31,21 +31,21 @@ namespace DSystem.Elements
             }
             VisualElement customDataContainer = new VisualElement();
 
-            DropdownField dropdownmethods = DSElementUtilities.CreateDropDownMenu("Action Type", v =>
+            DropdownField dropdownmethods = ODtoolsElementUtilities.CreateDropDownMenu("Action Type", v =>
             {
                 data.extraValues[0] = v.newValue;
             }, new string[] { "Spawn", "FlipSide", "Move", "Flip", "SetLevel" });
 
-            Toggle toggle = DSElementUtilities.CreateToggle("Pause Here", v =>
+            Toggle toggle = ODtoolsElementUtilities.CreateToggle("Pause Here", v =>
             {
                 data.extraValues[1] = v.newValue.ToString();
             });
 
-            TextField textField = DSElementUtilities.CreateTextField("ID", v =>     { data.q_string1 = v.newValue; });
-            TextField textField2 = DSElementUtilities.CreateTextField("Pos/Lvl", v =>    { data.q_string2 = v.newValue; });
-            Toggle toggle2 = DSElementUtilities.CreateToggle("Left Side", v =>     { data.q_bool1 = v.newValue; });
-            Toggle toggle3 = DSElementUtilities.CreateToggle("Flip all ", v =>     { data.q_bool2 = v.newValue; });
-            Foldout textfoldout = DSElementUtilities.CreateFoldout("Data", false);
+            TextField textField = ODtoolsElementUtilities.CreateTextField("ID", v =>     { data.q_string1 = v.newValue; });
+            TextField textField2 = ODtoolsElementUtilities.CreateTextField("Pos/Lvl", v =>    { data.q_string2 = v.newValue; });
+            Toggle toggle2 = ODtoolsElementUtilities.CreateToggle("Left Side", v =>     { data.q_bool1 = v.newValue; });
+            Toggle toggle3 = ODtoolsElementUtilities.CreateToggle("Flip all ", v =>     { data.q_bool2 = v.newValue; });
+            Foldout textfoldout = ODtoolsElementUtilities.CreateFoldout("Data", false);
 
 
 

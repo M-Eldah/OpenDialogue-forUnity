@@ -1,4 +1,4 @@
-using DSystem.utilities;
+using OpenDialouge.utilities;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem.Windows
+namespace OpenDialouge.Windows
 {
     
     public class DialogueSystemWindow : EditorWindow
@@ -31,18 +31,18 @@ namespace DSystem.Windows
         private void AddToolbar()
         {
             Toolbar toolbar = new Toolbar();
-            TextField FileNameTextField = DSElementUtilities.CreateTextField("", null);
+            TextField FileNameTextField = ODtoolsElementUtilities.CreateTextField("", null);
             if (Dname != null)
             { 
                 FileNameTextField.value = Dname.Split(".")[0]; 
             }
-            Button SaveButton = DSElementUtilities.CreateButton("Save", () => {
+            Button SaveButton = ODtoolsElementUtilities.CreateButton("Save", () => {
                 dSGraphView.save(FileNameTextField.text);
                 save.style.backgroundColor= new Color(0.345098f, 0.345098f, 0.345098f,1);
                 save.style.color=Color.white;
             });
             save = SaveButton;
-            DropdownField LoadMenu = DSElementUtilities.CreateDropDownMenu("SelectDialogue");
+            DropdownField LoadMenu = ODtoolsElementUtilities.CreateDropDownMenu("SelectDialogue");
             var Dialouges = Directory.GetFiles("Assets\\OpenDialogue\\Resources\\DialoguesData").Where(s => s.EndsWith(".json")); ;
 
             foreach(string d in Dialouges.ToArray())
@@ -51,7 +51,7 @@ namespace DSystem.Windows
                 LoadMenu.choices.Add(name);
             }
 
-            TextField StartingIndex = DSElementUtilities.CreateTextField("0", evt => {
+            TextField StartingIndex = ODtoolsElementUtilities.CreateTextField("0", evt => {
                 dSGraphView.data.startIndex = int.Parse(evt.newValue);
                 if (!dSGraphView.Nodes.ContainsKey(int.Parse(index.value)))
                 {
@@ -66,13 +66,13 @@ namespace DSystem.Windows
             index = StartingIndex;
             StartingIndex.label = "StartingIndex";
             dSGraphView.startindex = StartingIndex;
-            Button LoadButton = DSElementUtilities.CreateButton("Load",()=> {
+            Button LoadButton = ODtoolsElementUtilities.CreateButton("Load",()=> {
                 Dname = LoadMenu.text;
                 FileNameTextField.value = LoadMenu.text.Split(".")[0];
                 dSGraphView.ClearGraph();
                 StartingIndex.value = dSGraphView.LoadGraph(LoadMenu.text).ToString() ;
             });
-            Button ClearGraph = DSElementUtilities.CreateButton("Clear Graph", () => {
+            Button ClearGraph = ODtoolsElementUtilities.CreateButton("Clear Graph", () => {
                 dSGraphView.ClearGraph();
             });
             dSGraphView.Change.AddListener(delegate () { checkgraph(); });

@@ -1523,6 +1523,7 @@ GameObject:
   - component: {fileID: 783820062}
   - component: {fileID: 783820061}
   - component: {fileID: 783820063}
+  - component: {fileID: 783820064}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1571,6 +1572,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a62b69741967b43b03236df3b9eab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &783820064
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783820060}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cf927b189a7dce74791e546d6b1acde9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &796659824
 GameObject:
   m_ObjectHideFlags: 0
@@ -2761,7 +2783,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.0000001854162}
   m_SizeDelta: {x: 0, y: 140.6963}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1560821246
@@ -3531,7 +3553,6 @@ MonoBehaviour:
     startIndex: 0
     nodes: []
   nodes: []
-  actors: []
 --- !u!114 &3241987152402773281
 MonoBehaviour:
   m_ObjectHideFlags: 0

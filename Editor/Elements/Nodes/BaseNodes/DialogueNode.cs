@@ -3,28 +3,45 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System.Linq;
     using utilities;
+    /// <summary>
+    /// The parent class for Dialogue containing Nodes
+    /// </summary>
     public class DialogueNode : BaseNode
     {
         public bool skipable=false;
         public Foldout textfoldout;
-        delegate void Portdel(Port id);
+        //delegate void Portdel(Port id);
+
+        /// <summary>
+        /// Starting the node
+        /// </summary>
+        /// <param name="Pos"></param>
+        /// <param name="graph"></param>
         public override void Initialize(Vector2 Pos,DSGraphView graph)
         {
             base.Initialize(Pos,graph);
 
             data.NodeType = NodeType.DialogueNode;
         }
-
+        /// <summary>
+        /// Starting the node but with data
+        /// </summary>
+        /// <param name="Pos"></param>
+        /// <param name="graph"></param>
         public virtual void Initialize(Vector2 Pos,DSGraphView graph,NodeDB dB)
         {
             Initialize(Pos,graph);
             data = dB;
         }
-
+        /// <summary>
+        /// Drawing the node onto the graph
+        /// </summary>
+        /// <param name="Pos"></param>
+        /// <param name="graph"></param>
         public void Draw(bool extension,string drawName)
         {
             base.Draw();
@@ -32,26 +49,29 @@ namespace DSystem.Elements
             if(extension) 
             {
                 VisualElement customDataContainer = new VisualElement();
-                textfoldout = DSElementUtilities.CreateFoldout(drawName, false);
+                textfoldout = ODtoolsElementUtilities.CreateFoldout(drawName, false);
                 customDataContainer.Add(textfoldout);
                 extensionContainer.Add(customDataContainer);
             }
         }
+        /// <summary>
+        /// For Single, Random and Modified Random nodes
+        /// </summary>
         public virtual void DrawSingle()
         {
 
             base.Draw();
-            Port Choice = this.CreatePort("Output");
+            Port outPort = this.CreatePort("Output");
             //Here
-            Choice.RegisterCallback<MouseUpEvent, PortPass>(portcheck,new PortPass(Choice,0,data.id));
-            output.Add(Choice);
-            Choice.portName = $"Output";
-            outputContainer.Add(Choice);
+            outPort.RegisterCallback<MouseUpEvent, PortPass>(Portcheck,new PortPass(outPort,0,data.id));
+            output.Add(outPort);
+            outPort.portName = $"Output";
+            outputContainer.Add(outPort);
             if (data.ConnectedNodes.Count == 0)
             { data.ConnectedNodes.Add(-1); }
             //extension Container
             VisualElement customDataContainer = new VisualElement();
-            textfoldout = DSElementUtilities.CreateFoldout("Dialogue", false);
+            textfoldout = ODtoolsElementUtilities.CreateFoldout("Dialogue", false);
             if (data.dialogueText.Count == 0)
             {
                 if (skipable)
@@ -81,7 +101,7 @@ namespace DSystem.Elements
                     }
                 }
             }
-            Button addchoice = DSElementUtilities.CreateButton("Add Dialogue", () =>
+            Button addchoice = ODtoolsElementUtilities.CreateButton("Add Dialogue", () =>
             {
                 AddChoice();
             }
@@ -90,50 +110,55 @@ namespace DSystem.Elements
             customDataContainer.Add(textfoldout);
             extensionContainer.Add(customDataContainer);
         }
-
+        //ForNodes whith choices
         private void AddChoice()
         {
             if (skipable)
             {
                 data.dialogueText.Add($"Dialogue{data.dialogueText.Count}");
-                data.extraValues.Add(data.extraValues[data.extraValues.Count - 3]); data.extraValues.Add(data.extraValues[data.extraValues.Count - 3]); data.extraValues.Add("False");
+                data.extraValues.Add(data.extraValues[data.extraValues.Count - 3]); 
+                data.extraValues.Add(data.extraValues[data.extraValues.Count - 3]); 
+                data.extraValues.Add("False");
                 CreateDialogueContainer(data.dialogueText[data.dialogueText.Count - 1], data.extraValues[data.extraValues.Count - 3], data.extraValues[data.extraValues.Count - 2], "False");
             }
             else
             {
                 data.dialogueText.Add($"Dialogue{data.dialogueText.Count}");
-                data.extraValues.Add(data.extraValues[data.extraValues.Count - 2]); data.extraValues.Add(data.extraValues[data.extraValues.Count - 2]); ;
+                data.extraValues.Add(data.extraValues[data.extraValues.Count - 2]); 
+                data.extraValues.Add(data.extraValues[data.extraValues.Count - 2]);
                 CreateDialougeContainer(data.dialogueText[data.dialogueText.Count - 1], data.extraValues[data.extraValues.Count - 2], data.extraValues[data.extraValues.Count - 1]);
             }
         }
 
-        //for skipable
+        //For skipable
+
+        //**Check what the fuck skip does in Dialogue system Main file
         private void CreateDialogueContainer(string text, string extra, string extra2, string extra3)
         {
             VisualElement cont = new VisualElement();
-            TextField textField = DSElementUtilities.CreateTextArea(text, evt => { int index = Getindex(cont); data.dialogueText[index] = evt.newValue; }, KeyboardCombo);
+            TextField textField = ODtoolsElementUtilities.CreateTextArea(text, evt => { int index = Getindex(cont); data.dialogueText[index] = evt.newValue; }, KeyboardCombo);
             textField.RegisterCallback<KeyDownEvent, VisualElement>(KeyboardCombo2, cont);
             textField.AddToClassList("Speachdial    ougeText");
-            Foldout Extra = DSElementUtilities.CreateFoldout("Extra", true);
-            TextField Actor = DSElementUtilities.CreateTextField(extra, evt => { int index = Getindex(cont); data.extraValues[(index * 3)] = evt.newValue; });
+            Foldout Extra = ODtoolsElementUtilities.CreateFoldout("Extra", true);
+            TextField Actor = ODtoolsElementUtilities.CreateTextField(extra, evt => { int index = Getindex(cont); data.extraValues[(index * 3)] = evt.newValue; });
             Actor.label = "Actor";
-            TextField id = DSElementUtilities.CreateTextField(extra2, evt => { int index = Getindex(cont); data.extraValues[(index * 3) + 1] = evt.newValue; });
+            TextField id = ODtoolsElementUtilities.CreateTextField(extra2, evt => { int index = Getindex(cont); data.extraValues[(index * 3) + 1] = evt.newValue; });
             id.label = "FaceID";
 
-            Toggle toggle = DSElementUtilities.CreateToggle("Skip", evt => { int index = Getindex(cont); data.extraValues[(index * 3) + 2] = evt.newValue.ToString(); });
+            Toggle toggle = ODtoolsElementUtilities.CreateToggle("Skip", evt => { int index = Getindex(cont); data.extraValues[(index * 3) + 2] = evt.newValue.ToString(); });
             toggle.value = bool.Parse(extra3);
-            Button Delte = DSElementUtilities.CreateButton("Remove Dialogue", () =>
+            Button Delte = ODtoolsElementUtilities.CreateButton("Remove Dialogue", () =>
             {
                 DeleteEntry(cont);
             });
 
-            Button SwapUp = DSElementUtilities.CreateButton("SwapUp", () =>
+            Button SwapUp = ODtoolsElementUtilities.CreateButton("SwapUp", () =>
             {
-                Swap(cont,-1);
+                MoveEntry(cont,-1);
             });
-            Button SwapDown = DSElementUtilities.CreateButton("SwapDown", () =>
+            Button SwapDown = ODtoolsElementUtilities.CreateButton("SwapDown", () =>
             {
-                Swap(cont, +1);
+                MoveEntry(cont, +1);
             });
 
             Extra.Add(Actor);
@@ -148,10 +173,15 @@ namespace DSystem.Elements
             textfoldout.Add(cont);
             textField.Focus();
         }
-        private void Swap(VisualElement cont,int d)
+        /// <summary>
+        /// Rearange Dialogue order
+        /// </summary>
+        /// <param name="cont"></param>
+        /// <param name="id"></param>
+        private void MoveEntry(VisualElement cont,int id)
         {
             int index = Getindex(cont);
-            int index2 = index + d;
+            int index2 = index + id;
 
             for (int i = 0; i < 3; i++)
             {
@@ -189,6 +219,11 @@ namespace DSystem.Elements
 
 
         }
+
+        /// <summary>
+        /// Self Explanatory 
+        /// </summary>
+        /// <param name="cont"></param>
         private void DeleteEntry(VisualElement cont)
         {
             int index = Getindex(cont);
@@ -201,24 +236,23 @@ namespace DSystem.Elements
         }
 
         //for unskipable
+        // Dialogue which doesn't have the option to be skipped
         private void CreateDialougeContainer(string text, string extra, string extra2)
         {
             VisualElement cont = new VisualElement();
-            TextField textField = DSElementUtilities.CreateTextArea(text, evt => { int index = Getindex(cont); data.dialogueText[index] = evt.newValue; }, KeyboardCombo );
+            TextField textField = ODtoolsElementUtilities.CreateTextArea(text, evt => { int index = Getindex(cont); data.dialogueText[index] = evt.newValue; }, KeyboardCombo );
             textField.RegisterCallback<KeyDownEvent, VisualElement>(KeyboardCombo2, cont);
             textField.AddToClassList("SpeachdialougeText");
             textField.AddToClassList("SpeachdialougeText");
-            Foldout Extra = DSElementUtilities.CreateFoldout("Extra", true);
-            TextField Actor = DSElementUtilities.CreateTextField(extra, evt => { int index = Getindex(cont); data.extraValues[(index * 2)] = evt.newValue; });
+            Foldout Extra = ODtoolsElementUtilities.CreateFoldout("Extra", true);
+            TextField Actor = ODtoolsElementUtilities.CreateTextField(extra, evt => { int index = Getindex(cont); data.extraValues[(index * 2)] = evt.newValue; });
             Actor.label = "Actor";
-            TextField id = DSElementUtilities.CreateTextField(extra2, evt => { int index = Getindex(cont); data.extraValues[(index * 2) + 1] = evt.newValue; });
+            TextField id = ODtoolsElementUtilities.CreateTextField(extra2, evt => { int index = Getindex(cont); data.extraValues[(index * 2) + 1] = evt.newValue; });
             id.label = "Face";
 
-            Button Delte = DSElementUtilities.CreateButton("Remove Dialogue", () =>
+            Button Delte = ODtoolsElementUtilities.CreateButton("Remove Dialogue", () =>
             {
                 int index = Getindex(cont);
-                Debug.Log(index);
-
                 data.dialogueText.RemoveAt(index);
                 data.extraValues.RemoveAt((index * 2) + 1);
                 data.extraValues.RemoveAt((index * 2));
@@ -233,12 +267,16 @@ namespace DSystem.Elements
             textfoldout.Add(cont);
             textField.Focus();
         }
-
+        //Get index of a certain used in deleting Dialogue and reanranging 
         private int Getindex(VisualElement text)
         {
             int index = textfoldout.Children().ToList().IndexOf(text);
             return index;
         }
+        /// <summary>
+        /// Adding a new choice when pressing alt and e
+        /// </summary>
+        /// <param name="e"></param>
         void KeyboardCombo(KeyDownEvent e)
         {
             
@@ -247,6 +285,11 @@ namespace DSystem.Elements
                 AddChoice();
             }
         }
+        /// <summary>
+        /// Deleting entry when pressing alt and x 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="x"></param>
         void KeyboardCombo2(KeyDownEvent e,VisualElement x)
         {
             if (e.altKey && e.keyCode == KeyCode.X)
@@ -254,7 +297,12 @@ namespace DSystem.Elements
                 DeleteEntry(x);
             }
         }
-        public void portcheck(MouseUpEvent evt,PortPass port)
+        /// <summary>
+        /// Check Ports to see if we are currently connect to other ports 
+        /// </summary>
+        /// <param name="evt"></param>
+        /// <param name="port"></param>
+        public void Portcheck(MouseUpEvent evt,PortPass port)
         {
             BaseNode n = (BaseNode)port.port.node;
             if(port.port.connections.Count()==0)
@@ -265,7 +313,6 @@ namespace DSystem.Elements
             {
                 List<Edge> edges = new List<Edge>(port.port.connections);
                 BaseNode node = (BaseNode)edges[0].input.node;
-                Debug.Log(port.index);
                 data.ConnectedNodes[port.index]=node.data.id;
             }
         }

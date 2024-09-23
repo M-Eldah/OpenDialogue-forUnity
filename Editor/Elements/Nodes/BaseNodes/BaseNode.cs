@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using UnityEngine.UIElements;
     using utilities;
@@ -14,13 +14,13 @@ namespace DSystem.Elements
 
         public NodeDB data;
 
-
         protected DSGraphView GraphView;
+        //Important when inhertee initializee they need this so they get the NodeData Initialized otherwise error
         public BaseNode()
         {
             data = new NodeDB();
         }
-
+        //Important Initializing the node
         public virtual void Initialize(Vector2 Pos, DSGraphView graph)
         {
           
@@ -28,7 +28,7 @@ namespace DSystem.Elements
             data.pos = Pos;
             SetPosition(new Rect(Pos, Vector2.zero));
         }
-        public override void OnSelected()
+      /*  public override void OnSelected()
         {
             AddToClassList("infocus");
             base.OnSelected();
@@ -37,15 +37,15 @@ namespace DSystem.Elements
         {
             AddToClassList("outfocus");
             base.OnUnselected();
-        }
-
+        }*/
+        //importnat Draw into the gtaph
         public virtual void Draw()
         {
 
             inputport = this.CreatePort("Input", Orientation.Horizontal, Direction.Input, Port.Capacity.Multi);
-            inputport.portName = $"Input";
+            inputport.portName = "Input";
             inputContainer.Add(inputport);
-            TextField tag = DSElementUtilities.CreateTextField("Tag", evt => data.Tag = evt.newValue);
+            TextField tag = ODtoolsElementUtilities.CreateTextField("Tag", evt => data.Tag = evt.newValue);
             if(data.Tag!=null)
             {
                 tag.value = data.Tag;
@@ -53,8 +53,8 @@ namespace DSystem.Elements
             tag.label = "Tag";
             extensionContainer.Add(tag);
         }
-
-        public List<Edge> DisconnectPorts()
+        //Return a list of edges to used to disconnect the node
+        public List<Edge> Edges()
         {
             List<Edge> edges = new List<Edge>();
             foreach (Port port in output)
@@ -67,7 +67,11 @@ namespace DSystem.Elements
             }
             return edges;
         }
-
+        /// <summary>
+        /// Connected the node to diffrent node and return a list of edges connected 
+        /// </summary>
+        /// <param name="Nodes"></param>
+        /// <returns></returns>
         public List<Edge> nodeConnect(Dictionary<int, BaseNode> Nodes)
         {
             List<Edge> edge = new List<Edge>();

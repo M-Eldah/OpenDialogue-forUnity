@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using UnityEngine.UIElements;
     using utilities;
+    /// <summary>
+    /// Returns Simple Dialogue 
+    /// </summary>
     public class DSSingleNode : DialogueNode
     {
         public Port Choice;

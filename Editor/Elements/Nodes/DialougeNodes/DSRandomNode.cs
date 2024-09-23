@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using utilities;
+    /// <summary>
+    /// Random dialouge return
+    /// </summary>
     public class DSRandomNode : DialogueNode
     {
         public Port Choice;

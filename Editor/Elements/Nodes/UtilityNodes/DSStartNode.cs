@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System.IO;
     using System.Linq;
@@ -26,7 +26,7 @@ namespace DSystem.Elements
         {
             base.Draw();
             VisualElement customDataContainer = new VisualElement();
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Dialouge", v => {
+            DropdownField dropdownobjects = ODtoolsElementUtilities.CreateDropDownMenu("Dialouge", v => {
                 data.q_string1 = v.newValue;
             }
            );
@@ -37,7 +37,7 @@ namespace DSystem.Elements
                 string name = d.Split("\\")[4];
                 dropdownobjects.choices.Add(name);
             }
-            TextField textField = DSElementUtilities.CreateTextField("StartNode", v => { data.q_string2 = v.newValue; });
+            TextField textField = ODtoolsElementUtilities.CreateTextField("StartNode", v => { data.q_string2 = v.newValue; });
             if(data.q_string1 !=null)
             {
                 dropdownobjects.value = data.q_string1;

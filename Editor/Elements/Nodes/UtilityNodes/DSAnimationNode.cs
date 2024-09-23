@@ -3,9 +3,9 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
-    using DSystem.utilities;
+    using OpenDialouge.utilities;
     using System;
 
     public class DSAnimationNode : UtilityNode
@@ -27,12 +27,12 @@ namespace DSystem.Elements
         {
             base.Draw();
             VisualElement customDataContainer = new VisualElement();
-            DropdownField Parameters = DSElementUtilities.CreateDropDownMenu("Parameters", v =>
+            DropdownField Parameters = ODtoolsElementUtilities.CreateDropDownMenu("Parameters", v =>
             {
                 data.q_string1 = v.newValue;
             }
             );
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Objects", v =>
+            DropdownField dropdownobjects = ODtoolsElementUtilities.CreateDropDownMenu("Objects", v =>
             {
                 data.extraValues[0] = v.newValue;
                 Parameters.choices.Clear();
@@ -43,7 +43,7 @@ namespace DSystem.Elements
                 }
             }
             );
-            TextField textField = DSElementUtilities.CreateTextField("Clip Name", v => {
+            TextField textField = ODtoolsElementUtilities.CreateTextField("Clip Name", v => {
                     data.extraValues[1] = v.newValue;
             });
             var objects = Resources.FindObjectsOfTypeAll<GameObject>();
@@ -52,16 +52,16 @@ namespace DSystem.Elements
                 if (obj.GetComponent<Animator>() != null)
                 { dropdownobjects.choices.Add(obj.name); }
             }
-            Toggle toggle = DSElementUtilities.CreateToggle("Pause Here", v =>
+            Toggle toggle = ODtoolsElementUtilities.CreateToggle("Pause Here", v =>
             {
                 data.q_bool1 = v.newValue;
             });
-            Toggle toggle2 = DSElementUtilities.CreateToggle("Is Trigger", v =>
+            Toggle toggle2 = ODtoolsElementUtilities.CreateToggle("Is Trigger", v =>
             {
                data.q_bool2 = v.newValue;
             });
-            TextField textField2 = DSElementUtilities.CreateTextField("Parameter Value", v => { data.q_string2 = v.newValue; });
-            Foldout textfoldout = DSElementUtilities.CreateFoldout("Data", false);
+            TextField textField2 = ODtoolsElementUtilities.CreateTextField("Parameter Value", v => { data.q_string2 = v.newValue; });
+            Foldout textfoldout = ODtoolsElementUtilities.CreateFoldout("Data", false);
             if (data.extraValues[0] != "")
             {
                 dropdownobjects.value = data.extraValues[0];

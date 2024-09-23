@@ -3,20 +3,25 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System.Reflection;
     using utilities;
-
+    /// <summary>
+    /// BooleanChoiceNode,Checks for a Method and if that method returns a Boolean 
+    /// can be programmed when Checking the Choices at Dialouge Controller
+    /// </summary>
     public class DSBooleanChoiceNode : DialogueNode
     {
-        private List<string> valueName;
+        private List<string> methodNames;
         private List<DropdownField> prop;
+
+        
 
         public override void Initialize(Vector2 Pos, DSGraphView graph)
         {
             prop = new List<DropdownField>();
-            valueName = new List<string>();
+            methodNames = new List<string>();
             base.Initialize(Pos, graph);
             data.subType = SubType.BooleanChoiceNode;
             AddToClassList("MultiNode");
@@ -33,7 +38,7 @@ namespace DSystem.Elements
             //Main Container
             base.Draw(true, "Value");
 
-            DropdownField dropdownobjects = DSElementUtilities.CreateDropDownMenu("Object", v =>
+            DropdownField dropdownobjects = ODtoolsElementUtilities.CreateDropDownMenu("Object", v =>
             {
                 data.q_string1 = v.newValue;
                 AddValueNames(v.newValue);
@@ -51,7 +56,7 @@ namespace DSystem.Elements
 
             textfoldout.Add(dropdownobjects);
 
-            Button addchoice = DSElementUtilities.CreateButton("Add Choice", () =>
+            Button addchoice = ODtoolsElementUtilities.CreateButton("Add Choice", () =>
             {
                 int x = data.choices.Count - 1;
                 data.dialogueText.Add(data.dialogueText[x]);
@@ -88,15 +93,12 @@ namespace DSystem.Elements
             GameObject gameObject = GameObject.Find(v);
             if (gameObject != null)
             {
-                valueName.Clear();
+                methodNames.Clear();
 
-                List<MethodInfo> methodz = UtilityFunctions.GetMethods(gameObject);
-                foreach (MethodInfo method in methodz)
-                {
-                    valueName.Add(method.Name);
-                }
+                methodNames.AddRange(UtilityFunctions.GetMethodsNames(gameObject));
             }
-            prop.ForEach(m => { m.choices.Clear(); m.choices.AddRange(valueName); });
+            //Clearing the choices of the drop down field not releated to our choices which is the alternative text for each method
+            prop.ForEach(m => { m.choices.Clear(); m.choices.AddRange(methodNames); });
         }
 
         #region Choice Element Creation
@@ -106,35 +108,32 @@ namespace DSystem.Elements
             //the port
             Port Choice = this.CreatePort("", Orientation.Horizontal, Direction.Output, Port.Capacity.Single);
             output.Add(Choice);
-            Choice.RegisterCallback<MouseUpEvent, PortPass>(portcheck, new PortPass(Choice, Getindex(Choice), data.id));
+            Choice.RegisterCallback<MouseUpEvent, PortPass>(Portcheck, new PortPass(Choice, Getindex(Choice), data.id));
             Choice.portName = $"Output"; 
             if (newport)
             { data.ConnectedNodes.Add(-1); }
             //Choice Text
-            TextField choiceTextfield = DSElementUtilities.CreateTextField("Choice Text", evt =>
+            TextField choiceTextfield = ODtoolsElementUtilities.CreateTextField("Choice Text", evt =>
             {
                 int indeX = Getindex(Choice);
-                Debug.Log( "Choice"+indeX);
                 data.dialogueText[indeX] = evt.newValue;
             }, KeyboardCombo);
             //Choice Alternative
-            TextField alternative = DSElementUtilities.CreateTextField("MethodValues", evt =>
+            TextField alternative = ODtoolsElementUtilities.CreateTextField("Alternative Text", evt =>
             {
                 int indeX = Getindex(Choice);
-                Debug.Log("value" + indeX);
                 data.choices[indeX] = evt.newValue;
             }, KeyboardCombo);
-            DropdownField dropdownmethods = DSElementUtilities.CreateDropDownMenu("",
+            DropdownField dropdownmethods = ODtoolsElementUtilities.CreateDropDownMenu("",
             evt =>
             {
                 int indeX = Getindex(Choice);
-                Debug.Log("method" + indeX);
                 data.extraValues[indeX] = evt.newValue;
             });
             prop.Add(dropdownmethods);
-            if (valueName.Count != 0)
+            if (methodNames.Count != 0)
             {
-                dropdownmethods.choices.AddRange(valueName);
+                dropdownmethods.choices.AddRange(methodNames);
             }
 
             //Adding the values arranged by length of name, very useless and confusing as it's not assigned by assigment order
@@ -155,7 +154,7 @@ namespace DSystem.Elements
             container3.AddToClassList("rowContainer");
 
             //the fetus deletus
-            Button DeleteChoice = DSElementUtilities.CreateButton("X", () =>
+            Button DeleteChoice = ODtoolsElementUtilities.CreateButton("X", () =>
             {
                 if (data.choices.Count == 1)
                 {

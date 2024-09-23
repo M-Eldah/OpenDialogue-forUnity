@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using OpenDialouge;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -123,10 +123,6 @@ public class OpenDialogueController : MonoBehaviour
 
     public void StartDialogue()
     {
-        if(ActorFromHandeler)
-        {
-            actors=DialogueHandeler.actors;
-        }
         nodeData Node = DialogueSystem.DStart(DialogueHandeler.DialogueData, DialogueHandeler.ORSNode);
         if (Node != null)
         {
@@ -154,7 +150,6 @@ public class OpenDialogueController : MonoBehaviour
 
     public void UpdatedialogueUi(nodeData Node)
     {
-        Debug.Log(Node.type);
         ClearChoices();
         switch (Node.type)
         {
@@ -195,7 +190,6 @@ public class OpenDialogueController : MonoBehaviour
                 break;
 
             case TextType.MultiNode:
-                Debug.Log("Here2");
                 multinode = true;
                 single.SetActive(false);
                 multi.SetActive(true);
@@ -290,7 +284,7 @@ public class OpenDialogueController : MonoBehaviour
         }
         else
         {
-            Debug.Log("WrongInput");
+            Debug.LogError("WrongInput");
         }
     }
 

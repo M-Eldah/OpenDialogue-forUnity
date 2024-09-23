@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using OpenDialouge;
 
 public class ValueTestScript : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class ValueTestScript : MonoBehaviour
 
     public string Value;
     
+    public int PropertyINT
+    { get; }
 
     public string Greeting()
     {

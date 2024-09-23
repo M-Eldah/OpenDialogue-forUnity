@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using UnityEngine.UIElements;
     using utilities;
@@ -15,8 +15,7 @@ namespace DSystem.Elements
         }
         protected override void OnGroupRenamed(string oldName, string newName)
         {
-            Debug.Log(newName);
-            data.GName = newName;
+            data.GroupName = newName;
         }
 
         protected override void OnElementsAdded(IEnumerable<GraphElement> elements)

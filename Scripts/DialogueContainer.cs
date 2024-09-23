@@ -132,12 +132,12 @@ public class NodeDB
 public class GroupsDB
 {
 
-    public string GroupName;
+    private string groupName;
 
-    public string GName
+    public string GroupName
     {
-        get { return GroupName; }
-        set { Debug.Log(value);GroupName= value; }
+        get { return groupName; }
+        set { groupName= value; }
     }
                                          
     public List<int> ContainedNodes;
@@ -149,7 +149,7 @@ public class GroupsDB
     }
     public GroupsDB(string name, List<int> _Cnodes, Vector2 pos)
     {
-        GroupName = name;
+        groupName = name;
         ContainedNodes = _Cnodes;
         Position = pos;
     }

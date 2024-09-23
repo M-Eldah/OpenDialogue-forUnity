@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -31,8 +30,6 @@ public class DialogueHandeler : MonoBehaviour
         } 
     }
 
-    //the array of actors we choose from
-    public Actor[] actors;
     private void Awake()
     {
         if(data.Name=="")

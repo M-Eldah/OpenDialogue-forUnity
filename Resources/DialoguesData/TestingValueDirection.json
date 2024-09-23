@@ -1,0 +1,42 @@
+{
+    "name": "TestingValueDirection",
+    "id": 1,
+    "startIndex": 0,
+    "Nodes": [
+        {
+            "name": "ValueDirectionNode-ID:0",
+            "id": 0,
+            "dialogueText": [
+                "false"
+            ],
+            "extraValues": [
+                "1000"
+            ],
+            "choices": [
+                "Value0",
+                "Value1",
+                "Value2",
+                "Value3"
+            ],
+            "pos": {
+                "x": 793.0,
+                "y": 142.0
+            },
+            "subType": 9,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                -1,
+                -1,
+                -1,
+                -1
+            ],
+            "q_string1": "GameObject",
+            "q_string2": "Value",
+            "q_bool1": true,
+            "q_bool2": true,
+            "Tag": ""
+        }
+    ],
+    "Group": [],
+    "groudid": 0
+}

@@ -3,15 +3,16 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace DSystem.Elements
+namespace OpenDialouge.Elements
 {
     using System;
     using System.Linq;
     using utilities;
-
+    /// <summary>
+    /// The Basic Node for multiple choices
+    /// </summary>
     public class DSMultiNode : DialogueNode
     {
-        private TextField t;
         public override void Initialize(Vector2 Pos, DSGraphView graph)
         {
             base.Initialize(Pos, graph);
@@ -27,7 +28,7 @@ namespace DSystem.Elements
         public override void Draw()
         {
             base.Draw();
-            Button addchoice = DSElementUtilities.CreateButton("Add Choice", () =>
+            Button addchoice = ODtoolsElementUtilities.CreateButton("Add Choice", () =>
             {
                 data.choices.Add($"New Choice{data.choices.Count}");
                 data.extraValues.Add("False");
@@ -62,23 +63,23 @@ namespace DSystem.Elements
             container.AddToClassList("multiContainer");
             Port Choice = this.CreatePort("", Orientation.Horizontal, Direction.Output, Port.Capacity.Single);
             output.Add(Choice); 
-            Choice.RegisterCallback<MouseUpEvent, PortPass>(portcheck, new PortPass(Choice, Getindex(Choice),data.id));
+            Choice.RegisterCallback<MouseUpEvent, PortPass>(Portcheck, new PortPass(Choice, Getindex(Choice),data.id));
             Choice.portName = $"Output";
             if (data.ConnectedNodes.Count < output.Count)
             { data.ConnectedNodes.Add(-1); }
-            TextField choiceTextfield = DSElementUtilities.CreateTextField(data.choices[id], evt =>
+            TextField choiceTextfield = ODtoolsElementUtilities.CreateTextField(data.choices[id], evt =>
             {
                 int indeX = Getindex(Choice);
                 data.choices[indeX] = evt.newValue;
             }, KeyboardCombo);
-            Toggle ElementToggle = DSElementUtilities.CreateToggle("locked", evt =>
+            Toggle ElementToggle = ODtoolsElementUtilities.CreateToggle("locked", evt =>
             {
                 int indeX = Getindex(Choice);
                 data.extraValues[indeX] = (string)Convert.ChangeType(evt.newValue, typeof(string));
             });
 
             ElementToggle.value = (Boolean)Convert.ChangeType(data.extraValues[id], typeof(Boolean));
-            Button DeleteChoice = DSElementUtilities.CreateButton("X", () =>
+            Button DeleteChoice = ODtoolsElementUtilities.CreateButton("X", () =>
             {
                 if (data.choices.Count == 1)
                 {
