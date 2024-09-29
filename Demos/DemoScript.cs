@@ -21,7 +21,7 @@ public class DemoScript : MonoBehaviour
             }
             else
             {
-                if(!OpenDialogueController.instance.field.gameObject.activeInHierarchy)
+                if(!OpenDialogueController.instance.Inputmode)
                 OpenDialogueController.instance.ContinueDialogue();
             }
 

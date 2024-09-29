@@ -54,12 +54,6 @@ namespace OpenDialouge.Inspector
             Undo.RecordObject(target, "StartNodeChanged");
 
             Undo.RecordObject(target, "Actor change");
-            SerializedProperty tileProperty = serializedObject.FindProperty("actors");
-            EditorGUILayout.PropertyField(tileProperty, includeChildren: true);
-            if (tileProperty.hasChildren)
-            {
-                serializedObject.ApplyModifiedProperties();
-            }
             Undo.RecordObject(target, "ChangeStartNode");
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Override start node", "change the startNode of the dialogue keep at -1 if don't want to change it"));

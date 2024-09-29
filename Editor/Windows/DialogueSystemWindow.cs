@@ -117,7 +117,7 @@ namespace OpenDialouge.Windows
             graphView.StretchToParentSize();
             rootVisualElement.Add(graphView);
             dSGraphView = graphView;
-            if(Dname!=null)
+            if(Dname!=null&&Dname!="")
             {
                 dSGraphView.LoadGraph(Dname);
             }

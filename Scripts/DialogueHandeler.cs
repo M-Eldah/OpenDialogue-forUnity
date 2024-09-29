@@ -18,7 +18,7 @@ public class DialogueHandeler : MonoBehaviour
     [SerializeField]
     public DialogueValues data;
     [SerializeField]
-    public LineData[] nodes;
+    private LineData[] nodes;
     public DialogueValues DialogueData 
     { 
         get {

@@ -128,7 +128,20 @@ public class OpenDialogueController : MonoBehaviour
             UpdatedialogueUi(Node);
         }
     }
+    public bool Inputmode
+    {
+        get{
+            if (field == null)
+            {
+                return false;
+            }
+            else
+            {
+                return field.gameObject.activeInHierarchy;
+            }
+        }
 
+    }
     public void StartDialogue(DialogueValues dialogue)
     {
         NodeData Node = DialogueSystem.DStart(dialogue, dialogue.startIndex);
