@@ -12,13 +12,13 @@ namespace OpenDialouge.Elements
         public Port inputport;
         public List<Port> output = new List<Port>();
 
-        public NodeDB data;
+        public LineData data;
 
         protected DSGraphView GraphView;
         //Important when inhertee initializee they need this so they get the NodeData Initialized otherwise error
         public BaseNode()
         {
-            data = new NodeDB();
+            data = new LineData();
         }
         //Important Initializing the node
         public virtual void Initialize(Vector2 Pos, DSGraphView graph)

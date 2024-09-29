@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using OpenDialouge;
@@ -105,7 +104,7 @@ public class OpenDialogueController : MonoBehaviour
 
     public void ContinueDialogue()
     {
-        if (DialogueSystem.InDialogue && !multinode)
+        if (DialogueSystem.inDialogue && !multinode)
         {
             //check if the text is animating if we are skip the animation and load it completely
             if (!animatingText)
@@ -123,7 +122,7 @@ public class OpenDialogueController : MonoBehaviour
 
     public void StartDialogue()
     {
-        nodeData Node = DialogueSystem.DStart(DialogueHandeler.DialogueData, DialogueHandeler.ORSNode);
+        NodeData Node = DialogueSystem.DStart(DialogueHandeler.DialogueData, DialogueHandeler.ORSNode);
         if (Node != null)
         {
             UpdatedialogueUi(Node);
@@ -132,7 +131,7 @@ public class OpenDialogueController : MonoBehaviour
 
     public void StartDialogue(DialogueValues dialogue)
     {
-        nodeData Node = DialogueSystem.DStart(dialogue, dialogue.startIndex);
+        NodeData Node = DialogueSystem.DStart(dialogue, dialogue.startIndex);
         if (Node != null)
         {
             UpdatedialogueUi(Node);
@@ -141,25 +140,27 @@ public class OpenDialogueController : MonoBehaviour
 
     public void StartDialogue(string dialogueName)
     {
-        nodeData Node = DialogueSystem.DStart(dialogueName);
+        NodeData Node = DialogueSystem.DStart(dialogueName);
         if (Node != null)
         {
             UpdatedialogueUi(Node);
         }
     }
 
-    public void UpdatedialogueUi(nodeData Node)
+    public void UpdatedialogueUi(NodeData Node)
     {
         ClearChoices();
+        multi.SetActive(false);
+        single.SetActive(false);
         switch (Node.type)
         {
             case TextType.SingleNode:
                 multinode = false;
-                multi.SetActive(false);
                 single.SetActive(true);
-                if (Node.dialogue.locked)
+                Dialogue dialogue = Node.Dialogue<Dialogue>();
+                if (dialogue.locked)
                 {
-                    nodeData NewNode = DialogueSystem.DNext();
+                    NodeData NewNode = DialogueSystem.DNext();
                     UpdatedialogueUi(NewNode);
                 }
                 else
@@ -179,37 +180,36 @@ public class OpenDialogueController : MonoBehaviour
                     characterName.text = actors[Node.character.id].name;
                     if (animateText)
                     {
-                        dText = Node.dialogue.Text;
-                        AnimateText(Node.dialogue.Text);
+                        dText = dialogue.Text;
+                        AnimateText(dialogue.Text);
                     }
                     else
                     {
-                        dialogueText.text = Node.dialogue.Text;
+                        dialogueText.text = dialogue.Text;
                     }
                 }
                 break;
 
             case TextType.MultiNode:
                 multinode = true;
-                single.SetActive(false);
                 multi.SetActive(true);
                 choiceHolder.GetComponent<RectTransform>().sizeDelta =
                 new Vector2(0, Node.Choices.Count * 40 + (Node.Choices.Count - 1) * 10);
-                for (int i = 0; i < Node.Choices.Count; i++)
+                List<Dialogue> Choices = Node.Dialogue<List<Dialogue>>();
+                for (int i = 0; i < Choices.Count; i++)
                 {
-                    if (Node.Choices[i].locked)
+                    if (Choices[i].locked)
                     {
                         continue;
                     }
                     GameObject Button = Instantiate(buttonPrefab, choiceHolder.transform);
                     choices.Add(Button);
-                    int x = i;
-                    Button.GetComponent<Button>().onClick.AddListener(delegate () { choiceDelegate(x); });
-                    if (Node.Choices[i].Text[0] == '*' && Node.Choices[i].Text[1] == '*')
+                    Button.GetComponent<Button>().onClick.AddListener(delegate () { choiceDelegate(i); });
+                   /* if (Choices[i].Text[0] == '*' && Choices[i].Text[1] == '*')
                     {
                         Button.GetComponent<Button>().interactable = false;
-                        Node.Choices[i].Text = Node.Choices[i].Text.Remove(0, 2);
-                    }
+                        Choices[i].Text = Choices[i].Text.Remove(0, 2);
+                    }*/
                     Button.GetComponentInChildren<TextMeshProUGUI>().text = Node.Choices[i].Text;
                 }
                 //if you don't wait for end of frame the button is pressed fully and actually activated i don't know why
@@ -254,7 +254,7 @@ public class OpenDialogueController : MonoBehaviour
 
     public void NextNode()
     {
-        nodeData Node = DialogueSystem.DNext();
+        NodeData Node = DialogueSystem.DNext();
         if (Node != null)
         {
             UpdatedialogueUi(Node);
@@ -263,7 +263,7 @@ public class OpenDialogueController : MonoBehaviour
 
     public void SetPlayerChoice(int choice)
     {
-        nodeData Node = DialogueSystem.DNext(choice);
+        NodeData Node = DialogueSystem.DNext(choice);
         if (Node != null)
         { UpdatedialogueUi(Node); }
     }

@@ -15,7 +15,7 @@ public class DemoScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if(!DialogueSystem.InDialogue)
+            if(!DialogueSystem.inDialogue)
             {
                 OpenDialogueController.instance.StartDialogue();
             }

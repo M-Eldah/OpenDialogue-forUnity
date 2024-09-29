@@ -18,7 +18,7 @@ namespace OpenDialouge.Elements
             AddToClassList("ActionNode");
             data.choices.Add("Dialouge");
         }
-        public override void Initialize(Vector2 Pos, DSGraphView graph, NodeDB db)
+        public override void Initialize(Vector2 Pos, DSGraphView graph, LineData db)
         {
             Initialize(Pos, graph);
             data = db;

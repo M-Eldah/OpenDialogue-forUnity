@@ -8,7 +8,7 @@ namespace OpenDialouge.Elements
     using System.Linq;
     using utilities;
     /// <summary>
-    /// The parent class for Dialogue containing Nodes
+    /// The parent class for Dialogue containing Lines
     /// </summary>
     public class DialogueNode : BaseNode
     {
@@ -32,7 +32,7 @@ namespace OpenDialouge.Elements
         /// </summary>
         /// <param name="Pos"></param>
         /// <param name="graph"></param>
-        public virtual void Initialize(Vector2 Pos,DSGraphView graph,NodeDB dB)
+        public virtual void Initialize(Vector2 Pos,DSGraphView graph,LineData dB)
         {
             Initialize(Pos,graph);
             data = dB;

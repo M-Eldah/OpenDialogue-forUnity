@@ -20,7 +20,7 @@ namespace OpenDialouge.Elements
             data.choices.Add("Dialouge");
         }
 
-        public override void Initialize(Vector2 Pos, DSGraphView graph,NodeDB Data)
+        public override void Initialize(Vector2 Pos, DSGraphView graph,LineData Data)
         {
             Initialize(Pos, graph);
             data = Data;

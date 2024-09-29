@@ -4,115 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace OpenDialouge
 {
     /// <summary>
-    /// Custom class for encapsulation of CharacterData
-    /// </summary>
-    public class characterId
-    {
-        public int id, expression;
-
-        public characterId()
-        {
-        }
-
-        public characterId(int id, int expresion)
-        {
-            this.id = id;
-            this.expression = expresion;
-        }
-    }
-
-    /// <summary>
-    /// Custom class for encapsulation of DialogueLines
-    /// </summary>
-    public class Dialogue
-    {
-        public string Text;
-        public bool locked;
-        public bool alt;
-
-        public Dialogue(string text, bool locked)
-        {
-            Text = text;
-            this.locked = locked;
-        }
-
-        public Dialogue(string text, bool locked, bool alt) : this(text, locked)
-        {
-            this.alt = alt;
-        }
-    }
-
-    /// <summary>
-    /// Data encapsulator used to send the Dialogue data to the player Dialogue Controller in a friedlier and more abstract format
-    /// </summary>
-    public class nodeData
-    {
-        public Dialogue dialogue;
-        public List<Dialogue> Choices;
-        public characterId character;
-        public bool Pause;
-        public TextType type;
-        public string Tag;
-        public AudioClip clip;
-
-        //for utility nodes that have nothing to display
-        public nodeData(bool pause = false, string tag = "", AudioClip _clip = null, TextType TextType = TextType.EmptyNode)
-        {
-            type = TextType;
-            clip = _clip;
-            Tag = tag;
-            Pause = pause;
-        }
-
-        //for single Dialogue Node
-        public nodeData(Dialogue dialogue = null, characterId ch = null, string tag = "")
-        {
-            character = ch;
-            Tag = tag;
-            this.dialogue = dialogue;
-            type = TextType.SingleNode;
-        }
-
-        //for nodes with multiple choices
-        public nodeData(List<Dialogue> dialogue = null, SubType subType = SubType.MultiNode, string tag = "")
-        {
-            Tag = tag;
-            Choices = dialogue;
-            type = subType == SubType.MultiNode ? TextType.MultiNode : TextType.MultiNode;
-        }
-
-        public nodeData(Dialogue dialogue, List<Dialogue> choices, characterId character, bool pause, TextType type, string tag, AudioClip clip)
-        {
-            this.dialogue = dialogue;
-            Choices = choices;
-            this.character = character;
-            Pause = pause;
-            this.type = type;
-            Tag = tag;
-            this.clip = clip;
-        }
-    }
-
-    /// <summary>
     /// The Main Dialogue System resposible for Analyzing the dialogue data and sending it to the controller
     /// </summary>
-
-    public class DialogueSave
-    {
-        public List<DialogueRecord> Choices;
-
-        public DialogueSave()
-        {
-            Choices = new List<DialogueRecord>();
-        }
-    }
-
     public static class DialogueSystem
     {
         public delegate void DialogueEnd();
@@ -124,14 +22,15 @@ namespace OpenDialouge
         public static event DialogueNext Dialoguenext;
 
         private static DialogueValues data;
-        private static Dictionary<int, NodeDB> Nodes;
-        public static bool InDialogue;
-        public static int currentindex;
-        private static DialogueRecord Drecord;
-        public static int CommentIndex;
+        private static Dictionary<int, LineData> nodes;
+        public static bool inDialogue;
+        public static int currentIndex;
+        private static int nextIndex;
+        private static DialogueRecord dRecord;
+        public static int lineIndex;
 
         /// <summary>
-        /// Calls the DialogueNext Event which is used to force the Next Dialogue line to be loaded
+        /// Calls the DialogueNext Event which Makes the Next Dialogue line to be loaded
         /// </summary>
         public static void Next()
         {
@@ -150,60 +49,65 @@ namespace OpenDialouge
         /// <summary>
         /// Load the DialogueData
         /// </summary>
-        /// <param name="_data">The Dualouge Data</param>
+        /// <param name="_data">The Dialogue Data</param>
         /// <param name="startnode">The starting Node Id</param>
         /// <returns></returns>
-        public static nodeData DStart(DialogueValues _data, int startnode = -1)
+        public static NodeData DStart(DialogueValues _data, int startnode = -1)
         {
             data = _data;
-            CommentIndex = 0;
+            lineIndex = 0;
             //turn Node list to dictionary
-            Nodes = NodeDictionary(data.nodes);
-            //change teh static bool to indicate we are in Dialogue
-            InDialogue = true;
-            //Load save data
-            Drecord = LoadRecord(data.Name);
+            nodes = NodeDictionary(data.nodes);
+            //Indicates That we are in Dialogue
+            inDialogue = true;
+            //Load save data ??
+            dRecord = LoadRecord(data.Name);
             //check the starting index
             if (startnode == -1)
             {
                 //Check if the Dia
-                currentindex = Drecord.startModified ? Drecord.startindex : data.startIndex;
+                currentIndex = dRecord.startModified ? dRecord.startindex : data.startIndex;
             }
             else
             {
-                currentindex = startnode;
+                currentIndex = startnode;
             }
             //return the new node data
             return NodeDataReturn();
         }
-
-        public static nodeData DStart(string dialogueName, int startnode = -1)
+        /// <summary>
+        /// Load the DialogueData
+        /// </summary>
+        /// <param name="dialogueName">The Dialogue name</param>
+        /// <param name="startnode">The starting Node Id</param>
+        /// <returns></returns>
+        public static NodeData DStart(string dialogueName, int startnode = -1)
         {
-            data = new DialogueValues(loadDialogue(dialogueName));
-            CommentIndex = 0;
+            data = new DialogueValues(LoadDialogue(dialogueName));
+            lineIndex = 0;
             //turn Node list to dictionary
-            Nodes = NodeDictionary(data.nodes);
+            nodes = NodeDictionary(data.nodes);
             //change teh static bool to indicate we are in Dialogue
-            InDialogue = true;
-            //Load save data
-            Drecord = LoadRecord(data.Name);
+            inDialogue = true;
+            // ?? Load save data
+            dRecord = LoadRecord(data.Name);
             //check the starting index
             if (startnode == -1)
             {
-                //Check if the Dia
-                currentindex = Drecord.startModified ? Drecord.startindex : data.startIndex;
+                //Check if the Dialogue starting Index was changed
+                currentIndex = dRecord.startModified ? dRecord.startindex : data.startIndex;
             }
             else
             {
-                currentindex = startnode;
+                currentIndex = startnode;
             }
             //return the new node data
             return NodeDataReturn();
         }
 
         /// <summary>
-        /// A Method which return node data
-        /// and then return the appropriate data
+        /// A Method which returns node data
+        ///
         /// </summary>
         /// <param name="index">An Index, which points to which connected Node should the Dialogue go to next</param>
         /// <returns></returns>
@@ -211,43 +115,40 @@ namespace OpenDialouge
         ///Basically we uses this first to check which node we currently on using currentIndex and commentIndex
         ///then we send the data returned by the private method NodeDataReturn
         ///they are divided into two methods because it looks nicer
-        public static nodeData DNext(int index = 0)
+        public static NodeData DNext(int index = 0)
         {
-            if (Nodes == null)
+            if (nodes == null)
             {
-                Debug.Log("ZerosLength");
+                Debug.LogError("NoNodeDataPresnt");
             }
-            //get the next node index or in case of single nodes check if all Lines are have been read
-            if (Nodes[currentindex].subType == SubType.SingleNode)
+            ///if in a single node it check if all the lines has been read
+            ///as indexed by the Comment Index
+            if (nodes[currentIndex].subType == SubType.SingleNode)
             {
-                if (CommentIndex == Nodes[currentindex].dialogueText.Count - 1)
+                if (lineIndex == nodes[currentIndex].dialogueText.Count - 1)
                 {
-                    currentindex = Nodes[currentindex].ConnectedNodes[index];
-                    CommentIndex = 0;
+                    nextIndex = nodes[currentIndex].ConnectedNodes[index];
+                    lineIndex = 0;
                 }
                 else
                 {
-                    CommentIndex++;
+                    lineIndex++;
                 }
             }
             else
             {
-                Debug.LogWarning(Nodes[currentindex].Tag);
-                if (Nodes[currentindex].subType == SubType.ValueDirectionNode)
+                ///is this a value direction Node if not continue as normal
+                if (nodes[currentIndex].subType != SubType.ValueDirectionNode)
                 {
-                    currentindex = Nodes[currentindex].ConnectedNodes[int.Parse(Nodes[currentindex].Tag)];
-                }
-                else
-                {
-                    currentindex = Nodes[currentindex].ConnectedNodes[index];
+                    nextIndex = nodes[currentIndex].ConnectedNodes[index];
                 }
 
             }
-
-            if (currentindex == -1)
+            currentIndex = nextIndex;
+            if (currentIndex == -1)
             {
                 Dialogueend();
-                InDialogue = false;
+                inDialogue = false;
                 return null;
             }
             return NodeDataReturn();
@@ -257,70 +158,83 @@ namespace OpenDialouge
         /// Returns the nodeData, How Surprising
         /// </summary>
         /// <returns></returns>
-        private static nodeData NodeDataReturn()
+        private static NodeData NodeDataReturn()
         {
+            //Preform Utility function actions and check if they pauses the dialogue
             bool pause = NodeAction();
+
             //for all utility and direction node
-            if (Nodes[currentindex].NodeType == NodeType.UtilityNode || Nodes[currentindex].subType == SubType.ValueDirectionNode)
+            if (nodes[currentIndex].NodeType == NodeType.UtilityNode)
             {
                 AudioClip clip = null;
-                if (Nodes[currentindex].subType == SubType.AudioNode)
+                if (nodes[currentIndex].subType == SubType.AudioNode)
                 {
-                    clip = (AudioClip)Resources.Load(Nodes[currentindex].q_string1);
-                    return new nodeData(pause, Nodes[currentindex].Tag, clip, TextType.AudioNode);
+                    clip = (AudioClip)Resources.Load(nodes[currentIndex].q_string1);
+                    return new NodeData(pause, nodes[currentIndex].Tag, clip, TextType.AudioNode);
                 }
-                else if (Nodes[currentindex].subType == SubType.InputNode)
+                if (nodes[currentIndex].subType == SubType.InputNode)
                 {
-                    return new nodeData(pause, Nodes[currentindex].Tag, clip, TextType.InputNode);
+                    return new NodeData(pause, nodes[currentIndex].Tag, clip, TextType.InputNode);
                 }
-                return new nodeData(pause, Nodes[currentindex].Tag, clip);
+                return new NodeData(pause, nodes[currentIndex].Tag, clip);
             }
-            //for single,random and Modified random
-            if (Nodes[currentindex].subType == SubType.SingleNode || Nodes[currentindex].subType == SubType.RandomNode || Nodes[currentindex].subType == SubType.MRandomNode || Nodes[currentindex].subType == SubType.ScriptNode)
+
+            //for SingleNodes
+            if (nodes[currentIndex].subType == SubType.SingleNode  || 
+                nodes[currentIndex].subType == SubType.RandomNode  || 
+                nodes[currentIndex].subType == SubType.MRandomNode || 
+                nodes[currentIndex].subType == SubType.ScriptNode)
             {
                 CheckModifiedData();
-                nodeData singeNode = SingleNodeData();
+                NodeData singeNode = SingleNodeData();
                 return singeNode;
             }
+
             //for multinode and value choice node
-            return new nodeData(UnlockedList(Nodes[currentindex].subType, Nodes[currentindex].choices, Nodes[currentindex].extraValues, Nodes[currentindex].dialogueText), Nodes[currentindex].subType, Nodes[currentindex].Tag);
+            return new NodeData
+                (UnlockedList(nodes[currentIndex].subType, 
+                nodes[currentIndex].choices,        nodes[currentIndex].extraValues, 
+                nodes[currentIndex].dialogueText),  nodes[currentIndex].subType, 
+                nodes[currentIndex].Tag);
         }
 
         /// <summary>
         /// The Node data of nodes that returns a single line, Like Single, Random, ModifiedRandom and ScriptedNode
         /// </summary>
         /// <returns></returns>
-        private static nodeData SingleNodeData()
+        private static NodeData SingleNodeData()
         {
-            int Extraid = CommentIndex;
+            int Extraid = lineIndex;
             int ExtraGuide = Extraid * 3;
             string ChDiaoluge = "";
             bool locked = false;
-            characterId id = new characterId();
-            switch (Nodes[currentindex].subType)
+            CharacterId id = new CharacterId();
+            switch (nodes[currentIndex].subType)
             {
                 case SubType.SingleNode:
-                    locked = bool.Parse(Nodes[currentindex].extraValues[ExtraGuide + 2]);
-                    ChDiaoluge = Nodes[currentindex].dialogueText[Extraid];
-                    id = new characterId(int.Parse(Nodes[currentindex].extraValues[ExtraGuide]), int.Parse(Nodes[currentindex].extraValues[ExtraGuide + 1]));
+                    locked = bool.Parse(nodes[currentIndex].extraValues[ExtraGuide + 2]);
+                    ChDiaoluge = nodes[currentIndex].dialogueText[Extraid];
+                    id = new CharacterId(
+                        int.Parse(nodes[currentIndex].extraValues[ExtraGuide]), 
+                        int.Parse(nodes[currentIndex].extraValues[ExtraGuide + 1]));
 
                     break;
 
                 case SubType.RandomNode:
-                    Extraid = UnityEngine.Random.Range(0, Nodes[currentindex].dialogueText.Count);
+                    Extraid = UnityEngine.Random.Range(0, nodes[currentIndex].dialogueText.Count);
                     ExtraGuide = Extraid * 2;
-                    ChDiaoluge = Nodes[currentindex].dialogueText[Extraid];
-                    id = new characterId(int.Parse(Nodes[currentindex].extraValues[ExtraGuide]), int.Parse(Nodes[currentindex].extraValues[ExtraGuide + 1]));
+                    ChDiaoluge = nodes[currentIndex].dialogueText[Extraid];
+                    id = new CharacterId(int.Parse(nodes[currentIndex].extraValues[ExtraGuide]), int.Parse(nodes[currentIndex].extraValues[ExtraGuide + 1]));
                     break;
 
                 case SubType.MRandomNode:
 
-                    bool valuetype = Nodes[currentindex].q_bool1;
-                    bool greater = Nodes[currentindex].q_bool2;
-                    GameObject gameObject = GameObject.Find(Nodes[currentindex].q_string1);
-                    Extraid = (int)Convert.ChangeType(Value(gameObject, Nodes[currentindex].q_string2, valuetype), typeof(int));
+                    bool valuetype = nodes[currentIndex].q_bool1;
+                    bool greater = nodes[currentIndex].q_bool2;
+                    GameObject gameObject = GameObject.Find(nodes[currentIndex].q_string1);
+                    Extraid = (int)Convert.ChangeType(GetValue(gameObject, nodes[currentIndex].q_string2, valuetype), typeof(int));
 
-                    if (Extraid < 0 || Extraid >= Nodes[currentindex].dialogueText.Count)
+                    if (Extraid < 0 || Extraid >= nodes[currentIndex].dialogueText.Count)
                     {
                         if (Extraid < 0)
                         {
@@ -328,18 +242,18 @@ namespace OpenDialouge
                         }
                         else
                         {
-                            Extraid = Nodes[currentindex].dialogueText.Count;
+                            Extraid = nodes[currentIndex].dialogueText.Count;
                         }
                     }
                     else
                     {
                         if (greater)
                         {
-                            if (Extraid == Nodes[currentindex].dialogueText.Count)
+                            if (Extraid == nodes[currentIndex].dialogueText.Count)
                             {
-                                Extraid = Nodes[currentindex].dialogueText.Count - 1;
+                                Extraid = nodes[currentIndex].dialogueText.Count - 1;
                             }
-                            Extraid = UnityEngine.Random.Range(Mathf.FloorToInt(Extraid), Nodes[currentindex].dialogueText.Count);
+                            Extraid = UnityEngine.Random.Range(Mathf.FloorToInt(Extraid), nodes[currentIndex].dialogueText.Count);
                         }
                         else
                         {
@@ -350,55 +264,48 @@ namespace OpenDialouge
                             Extraid = UnityEngine.Random.Range(0, Mathf.FloorToInt((float)Extraid));
                         }
                     }
-                    ChDiaoluge = Nodes[currentindex].dialogueText[Extraid];
+                    ChDiaoluge = nodes[currentIndex].dialogueText[Extraid];
                     ExtraGuide = Extraid * 2;
-                    id = new characterId(int.Parse(Nodes[currentindex].extraValues[ExtraGuide]), int.Parse(Nodes[currentindex].extraValues[ExtraGuide + 1]));
+                    id = new CharacterId(int.Parse(nodes[currentIndex].extraValues[ExtraGuide]), int.Parse(nodes[currentIndex].extraValues[ExtraGuide + 1]));
                     break;
 
                 case SubType.ScriptNode:
-                    Debug.Log(1);
-                    GameObject gameObject1 = GameObject.Find(Nodes[currentindex].q_string1);
-                    MethodInfo m = GetMethod(gameObject1, Nodes[currentindex].q_string2);
-                    Debug.Log(m.Name);
+                    GameObject gameObject1 = GameObject.Find(nodes[currentIndex].q_string1);
+                    MethodInfo m = GetMethod(gameObject1, nodes[currentIndex].q_string2);
                     ParameterInfo[] ps = m.GetParameters();
                     if (ps.Length == 0)
                     {
-                        ChDiaoluge = (string)m.Invoke(GetComponent(gameObject1, m), new object[] { });
-                        Debug.Log(ChDiaoluge);
-                    }
+                        ChDiaoluge = (string)m.Invoke(GetComponent(gameObject1, m), new object[] { });                    }
                     else if (ps.Length == 1)
                     {
-                        var paramter = Convert.ChangeType(Nodes[currentindex].extraValues[2], ps[0].ParameterType);
+                        var paramter = Convert.ChangeType(nodes[currentIndex].extraValues[2], ps[0].ParameterType);
                         ChDiaoluge = (string)m.Invoke(GetComponent(gameObject1, m), new object[] { paramter });
-                        Debug.Log(ChDiaoluge);
                     }
                     else
                     {
                         object[] objects = new object[ps.Count()];
-                        string[] inputs = Nodes[currentindex].extraValues[2].Split(",");
+                        string[] inputs = nodes[currentIndex].extraValues[2].Split(",");
                         for (int i = 0; i < inputs.Length; i++)
                         {
                             objects[i] = Convert.ChangeType(inputs[i], ps[i].ParameterType);
                         }
                         ChDiaoluge = (string)m.Invoke(GetComponent(gameObject1, m), objects);
-                        Debug.Log(ChDiaoluge);
                     }
-                    id = new characterId(int.Parse(Nodes[currentindex].extraValues[0]), int.Parse(Nodes[currentindex].extraValues[1]));
+                    id = new CharacterId(int.Parse(nodes[currentIndex].extraValues[0]), int.Parse(nodes[currentIndex].extraValues[1]));
                     break;
             }
             ChDiaoluge = ReplaceVocab(ChDiaoluge);
-            nodeData nodedata = new nodeData(new Dialogue(ChDiaoluge, locked), id, Nodes[currentindex].Tag);
+            NodeData nodedata = new NodeData(new Dialogue(ChDiaoluge, locked), id, nodes[currentIndex].Tag);
 
             return nodedata;
         }
 
         private static string ReplaceVocab(string text)
         {
-            foreach (Vocab v in Drecord.Variables)
+            foreach (Vocab v in dRecord.Variables)
             {
                 if (text.Contains(v.key))
                 {
-                    Debug.Log(text.Replace(v.key, v.value));
                     text = text.Replace(v.key, v.value);
                 }
             }
@@ -412,20 +319,20 @@ namespace OpenDialouge
         private static bool NodeAction()
         {
             bool pause = false;
-            switch (Nodes[currentindex].subType)
+            switch (nodes[currentIndex].subType)
             {
                 #region Valuechangenode
 
                 case SubType.Valuechangenode:
-                    if (!Nodes[currentindex].q_bool1)
+                    if (!nodes[currentIndex].q_bool1)
                     {
-                        GameObject gameObject3 = GameObject.Find(Nodes[currentindex].q_string1);
+                        GameObject gameObject3 = GameObject.Find(nodes[currentIndex].q_string1);
                         List<PropertyInfo> Properties = UtilityFunctions.GetProperties(gameObject3);
                         foreach (PropertyInfo _m in Properties)
                         {
-                            if (_m.Name == Nodes[currentindex].q_string2)
+                            if (_m.Name == nodes[currentIndex].q_string2)
                             {
-                                if (Nodes[currentindex].q_bool2)
+                                if (nodes[currentIndex].q_bool2)
                                 {
                                     if (_m.PropertyType == typeof(bool))
                                     {
@@ -433,55 +340,55 @@ namespace OpenDialouge
                                     }
                                     else if (_m.PropertyType == typeof(int))
                                     {
-                                        _m.SetValue(gameObject3.GetComponent(UtilityFunctions.Type(gameObject3, _m)), (int)Value(gameObject3, _m.Name, Nodes[currentindex].q_bool1) + (int)Convert.ChangeType(Nodes[currentindex].extraValues[0], _m.PropertyType));
+                                        _m.SetValue(gameObject3.GetComponent(UtilityFunctions.Type(gameObject3, _m)), (int)GetValue(gameObject3, _m.Name, nodes[currentIndex].q_bool1) + (int)Convert.ChangeType(nodes[currentIndex].extraValues[0], _m.PropertyType));
                                     }
                                     else if (_m.PropertyType == typeof(float))
                                     {
-                                        _m.SetValue(gameObject3.GetComponent(UtilityFunctions.Type(gameObject3, _m)), (float)Value(gameObject3, _m.Name, Nodes[currentindex].q_bool1) + (float)Convert.ChangeType(Nodes[currentindex].extraValues[0], _m.PropertyType));
+                                        _m.SetValue(gameObject3.GetComponent(UtilityFunctions.Type(gameObject3, _m)), (float)GetValue(gameObject3, _m.Name, nodes[currentIndex].q_bool1) + (float)Convert.ChangeType(nodes[currentIndex].extraValues[0], _m.PropertyType));
                                     }
                                     else if (_m.PropertyType == typeof(string))
                                     {
-                                        _m.SetValue(gameObject3.GetComponent(UtilityFunctions.Type(gameObject3, _m)), (string)Value(gameObject3, _m.Name, Nodes[currentindex].q_bool1) + (string)Convert.ChangeType(Nodes[currentindex].extraValues[0], _m.PropertyType));
+                                        _m.SetValue(gameObject3.GetComponent(UtilityFunctions.Type(gameObject3, _m)), (string)GetValue(gameObject3, _m.Name, nodes[currentIndex].q_bool1) + (string)Convert.ChangeType(nodes[currentIndex].extraValues[0], _m.PropertyType));
                                     }
                                 }
                                 else
                                 {
-                                    _m.SetValue(gameObject3.GetComponent(UtilityFunctions.Type(gameObject3, _m)), Convert.ChangeType(Nodes[currentindex].extraValues[0], _m.PropertyType));
+                                    _m.SetValue(gameObject3.GetComponent(UtilityFunctions.Type(gameObject3, _m)), Convert.ChangeType(nodes[currentIndex].extraValues[0], _m.PropertyType));
                                 }
                             }
                         }
                     }
                     else
                     {
-                        GameObject gameObject1 = GameObject.Find(Nodes[currentindex].q_string1);
+                        GameObject gameObject1 = GameObject.Find(nodes[currentIndex].q_string1);
                         List<FieldInfo> Properties = UtilityFunctions.GetFields(gameObject1);
                         foreach (FieldInfo _m in Properties)
                         {
-                            if (_m.Name == Nodes[currentindex].q_string2)
+                            if (_m.Name == nodes[currentIndex].q_string2)
                             {
-                                if (Nodes[currentindex].q_bool2)
+                                if (nodes[currentIndex].q_bool2)
                                 {
-                                    var nas = Value(gameObject1, _m.Name, Nodes[currentindex].q_bool1);
+                                    var nas = GetValue(gameObject1, _m.Name, nodes[currentIndex].q_bool1);
                                     if (_m.FieldType == typeof(bool))
                                     {
                                         Debug.LogError("You can't add Booleans");
                                     }
                                     else if (_m.FieldType == typeof(int))
                                     {
-                                        _m.SetValue(gameObject1.GetComponent(UtilityFunctions.Type(gameObject1, _m)), (int)nas + (int)Convert.ChangeType(Nodes[currentindex].extraValues[0], _m.FieldType));
+                                        _m.SetValue(gameObject1.GetComponent(UtilityFunctions.Type(gameObject1, _m)), (int)nas + (int)Convert.ChangeType(nodes[currentIndex].extraValues[0], _m.FieldType));
                                     }
                                     else if (_m.FieldType == typeof(float))
                                     {
-                                        _m.SetValue(gameObject1.GetComponent(UtilityFunctions.Type(gameObject1, _m)), (float)nas + (float)Convert.ChangeType(Nodes[currentindex].extraValues[0], _m.FieldType));
+                                        _m.SetValue(gameObject1.GetComponent(UtilityFunctions.Type(gameObject1, _m)), (float)nas + (float)Convert.ChangeType(nodes[currentIndex].extraValues[0], _m.FieldType));
                                     }
                                     else if (_m.FieldType == typeof(string))
                                     {
-                                        _m.SetValue(gameObject1.GetComponent(UtilityFunctions.Type(gameObject1, _m)), (string)nas + (string)Convert.ChangeType(Nodes[currentindex].extraValues[0], _m.FieldType));
+                                        _m.SetValue(gameObject1.GetComponent(UtilityFunctions.Type(gameObject1, _m)), (string)nas + (string)Convert.ChangeType(nodes[currentIndex].extraValues[0], _m.FieldType));
                                     }
                                 }
                                 else
                                 {
-                                    _m.SetValue(gameObject1.GetComponent(UtilityFunctions.Type(gameObject1, _m)), Convert.ChangeType(Nodes[currentindex].extraValues[0], _m.FieldType));
+                                    _m.SetValue(gameObject1.GetComponent(UtilityFunctions.Type(gameObject1, _m)), Convert.ChangeType(nodes[currentIndex].extraValues[0], _m.FieldType));
                                 }
                             }
                         }
@@ -494,26 +401,26 @@ namespace OpenDialouge
 
                 case SubType.ActionNode:
                     //if there are no para
-                    if (!Nodes[currentindex].q_bool2)
+                    if (!nodes[currentIndex].q_bool2)
                     {
-                        GameObject gameObject2 = GameObject.Find(Nodes[currentindex].q_string1);
-                        gameObject2.SendMessage(Nodes[currentindex].q_string2);
+                        GameObject gameObject2 = GameObject.Find(nodes[currentIndex].q_string1);
+                        gameObject2.SendMessage(nodes[currentIndex].q_string2);
                     }
                     else //if there is para
                     {
-                        GameObject gameObject2 = GameObject.Find(Nodes[currentindex].q_string1);
-                        MethodInfo m = GetMethod(gameObject2, Nodes[currentindex].q_string2);
+                        GameObject gameObject2 = GameObject.Find(nodes[currentIndex].q_string1);
+                        MethodInfo m = GetMethod(gameObject2, nodes[currentIndex].q_string2);
                         ParameterInfo[] ps = m.GetParameters();
-                        string[] inputs = Nodes[currentindex].extraValues[0].Split(",");
+                        string[] inputs = nodes[currentIndex].extraValues[0].Split(",");
                         if (inputs.Length == 1)
                         {
-                            var paramter = Convert.ChangeType(Nodes[currentindex].extraValues[0], ps[0].ParameterType);
+                            var paramter = Convert.ChangeType(nodes[currentIndex].extraValues[0], ps[0].ParameterType);
                             m.Invoke(GetComponent(gameObject2, m), new object[] { paramter });
                         }
                         else
                         {
                             object[] objects = new object[ps.Count()];
-                            inputs = Nodes[currentindex].extraValues[0].Split(",");
+                            inputs = nodes[currentIndex].extraValues[0].Split(",");
                             for (int i = 0; i < inputs.Length; i++)
                             {
                                 objects[i] = Convert.ChangeType(inputs[i], ps[i].ParameterType);
@@ -521,7 +428,7 @@ namespace OpenDialouge
                             m.Invoke(GetComponent(gameObject2, m), objects);
                         }
                     }
-                    pause = Nodes[currentindex].q_bool1;
+                    pause = nodes[currentIndex].q_bool1;
                     break;
 
                 #endregion ActionNode
@@ -529,13 +436,13 @@ namespace OpenDialouge
                 #region ChoiceUnlockNode
 
                 case SubType.ChoiceUnlockNode:
-                    int node = int.Parse(Nodes[currentindex].q_string2);
+                    int node = int.Parse(nodes[currentIndex].q_string2);
 
-                    for (int i = int.Parse(Nodes[currentindex].extraValues[0]); i < int.Parse(Nodes[currentindex].extraValues[1]); i++)
+                    for (int i = int.Parse(nodes[currentIndex].extraValues[0]); i < int.Parse(nodes[currentIndex].extraValues[1]); i++)
                     {
                         int choice = i;
 
-                        Drecord.SetRecord(node, choice, Nodes[currentindex].q_bool2);
+                        dRecord.SetRecord(node, choice, nodes[currentIndex].q_bool2);
                     }
 
                     Save(SaveName);
@@ -546,8 +453,8 @@ namespace OpenDialouge
                 #region StartChangeNode
 
                 case SubType.StartChangeNode:
-                    Drecord.startindex = int.Parse(Nodes[currentindex].q_string2);
-                    Drecord.startModified = true;
+                    dRecord.startindex = int.Parse(nodes[currentIndex].q_string2);
+                    dRecord.startModified = true;
                     Save(SaveName);
                     break;
 
@@ -558,24 +465,23 @@ namespace OpenDialouge
 
                 case SubType.ValueDirectionNode:
                     //Checks if method or value
-                    bool check = bool.Parse(Nodes[currentindex].dialogueText[0]);
+                    bool check = bool.Parse(nodes[currentIndex].dialogueText[0]);
                     if (check)
                     {
                         float value;
-                        GameObject gameObject1 = GameObject.Find(Nodes[currentindex].q_string1);
-                        MethodInfo m = GetMethod(gameObject1, Nodes[currentindex].q_string2);
+                        GameObject gameObject1 = GameObject.Find(nodes[currentIndex].q_string1);
+                        MethodInfo m = GetMethod(gameObject1, nodes[currentIndex].q_string2);
                         ParameterInfo[] ps = m.GetParameters();
                         if (ps.Length == 1)
                         {
-                            var paramter = Convert.ChangeType(Nodes[currentindex].extraValues[0], ps[0].ParameterType);
+                            var paramter = Convert.ChangeType(nodes[currentIndex].extraValues[0], ps[0].ParameterType);
                             var o = m.Invoke(GetComponent(gameObject1, m), new object[] { paramter });
                             value = Convert.ToSingle(o);
                         }
                         else
                         {
-                            Debug.Log(m.Name);
                             object[] objects = new object[ps.Count()];
-                            string[] inputs = Nodes[currentindex].extraValues[0].Split(",");
+                            string[] inputs = nodes[currentIndex].extraValues[0].Split(",");
                             for (int i = 0; i < inputs.Length; i++)
                             {
                                 objects[i] = Convert.ChangeType(inputs[i], ps[i].ParameterType);
@@ -584,22 +490,22 @@ namespace OpenDialouge
                             value = Convert.ToSingle(o);
 
                         }
-                        bool direction = Nodes[currentindex].q_bool2;
-                        for (int i = 0; i < Nodes[currentindex].choices.Count; i++)
+                        bool direction = nodes[currentIndex].q_bool2;
+                        for (int i = 0; i < nodes[currentIndex].choices.Count; i++)
                         {
                             if (direction)
                             {
-                                if (float.Parse(Nodes[currentindex].choices[i]) <= value)
+                                if (float.Parse(nodes[currentIndex].choices[i]) <= value)
                                 {
-                                    Nodes[currentindex].Tag = i.ToString();
+                                    nextIndex = i;
                                     break;
                                 }
                             }
                             else
                             {
-                                if (float.Parse(Nodes[currentindex].choices[i]) >= value)
+                                if (float.Parse(nodes[currentIndex].choices[i]) >= value)
                                 {
-                                    Nodes[currentindex].Tag = i.ToString();
+                                    nextIndex = i;
                                     break;
                                 }
                             }
@@ -607,41 +513,40 @@ namespace OpenDialouge
                     }
                     else
                     {
-                        bool greater1 = Nodes[currentindex].q_bool2;
-                        bool valuetype1 = Nodes[currentindex].q_bool1;
-                        GameObject q_string1ect2 = GameObject.Find(Nodes[currentindex].q_string1);
-                        var Tan = Value(q_string1ect2, Nodes[currentindex].q_string2, valuetype1);
+                        bool greater1 = nodes[currentIndex].q_bool2;
+                        bool valuetype1 = nodes[currentIndex].q_bool1;
+                        GameObject q_string1ect2 = GameObject.Find(nodes[currentIndex].q_string1);
+                        var Tan = GetValue(q_string1ect2, nodes[currentIndex].q_string2, valuetype1);
                         if (Tan.GetType() == typeof(bool))
                         {
                             bool v = (bool)Tan;
-                            for (int i = 0; i < Nodes[currentindex].choices.Count; i++)
+                            for (int i = 0; i < nodes[currentIndex].choices.Count; i++)
                             {
-                                if (bool.Parse(Nodes[currentindex].choices[i]) == v)
+                                if (bool.Parse(nodes[currentIndex].choices[i]) == v)
                                 {
-                                    Nodes[currentindex].Tag = i.ToString();
+                                    nodes[currentIndex].Tag = i.ToString();
                                     break;
                                 }
                             }
                         }
                         else
                         {
-                            Debug.Log(Tan);
-                            float v = booleanConvert(Tan);
-                            for (int i = 0; i < Nodes[currentindex].choices.Count; i++)
+                            float v = BooleanConvert(Tan);
+                            for (int i = 0; i < nodes[currentIndex].choices.Count; i++)
                             {
                                 if (greater1)
                                 {
-                                    if (float.Parse(Nodes[currentindex].choices[i]) <= v)
+                                    if (float.Parse(nodes[currentIndex].choices[i]) <= v)
                                     {
-                                        Nodes[currentindex].Tag = i.ToString();
+                                        nextIndex = i;
                                         break;
                                     }
                                 }
                                 else
                                 {
-                                    if (float.Parse(Nodes[currentindex].choices[i]) >= v)
+                                    if (float.Parse(nodes[currentIndex].choices[i]) >= v)
                                     {
-                                        Nodes[currentindex].Tag = i.ToString();
+                                        nextIndex = i;
                                         break;
                                     }
                                 }
@@ -657,23 +562,23 @@ namespace OpenDialouge
                 #region AnimationNode
 
                 case SubType.AnimationNode:
-                    Animator animation = GameObject.Find(Nodes[currentindex].extraValues[0]).GetComponent<Animator>();
-                    if (Nodes[currentindex].extraValues[1] == "")
+                    Animator animation = GameObject.Find(nodes[currentIndex].extraValues[0]).GetComponent<Animator>();
+                    if (nodes[currentIndex].extraValues[1] == "")
                     {
-                        animation.Play(Nodes[currentindex].extraValues[1]);
+                        animation.Play(nodes[currentIndex].extraValues[1]);
                     }
                     else
                     {
-                        if (Nodes[currentindex].q_bool2)
+                        if (nodes[currentIndex].q_bool2)
                         {
-                            animation.SetTrigger(Nodes[currentindex].q_string1);
+                            animation.SetTrigger(nodes[currentIndex].q_string1);
                         }
                         else
                         {
                             AnimatorControllerParameter Apara = null;
                             foreach (AnimatorControllerParameter a in animation.parameters)
                             {
-                                if (a.name == Nodes[currentindex].q_string1)
+                                if (a.name == nodes[currentIndex].q_string1)
                                 {
                                     Apara = a;
                                     break;
@@ -682,21 +587,21 @@ namespace OpenDialouge
                             switch (Apara.type)
                             {
                                 case AnimatorControllerParameterType.Bool:
-                                    animation.SetBool(Nodes[currentindex].q_string1, bool.Parse(Nodes[currentindex].q_string2));
+                                    animation.SetBool(nodes[currentIndex].q_string1, bool.Parse(nodes[currentIndex].q_string2));
                                     break;
 
                                 case AnimatorControllerParameterType.Int:
-                                    animation.SetInteger(Nodes[currentindex].q_string1, int.Parse(Nodes[currentindex].q_string2));
+                                    animation.SetInteger(nodes[currentIndex].q_string1, int.Parse(nodes[currentIndex].q_string2));
                                     break;
 
                                 case AnimatorControllerParameterType.Float:
-                                    animation.SetFloat(Nodes[currentindex].q_string1, float.Parse(Nodes[currentindex].q_string2));
+                                    animation.SetFloat(nodes[currentIndex].q_string1, float.Parse(nodes[currentIndex].q_string2));
                                     break;
                             }
                         }
                     }
 
-                    pause = Nodes[currentindex].q_bool1;
+                    pause = nodes[currentIndex].q_bool1;
                     break;
 
                 #endregion AnimationNode
@@ -704,48 +609,10 @@ namespace OpenDialouge
                 #region AudioNode
 
                 case SubType.AudioNode:
-                    pause = Nodes[currentindex].q_bool1;
+                    pause = nodes[currentIndex].q_bool1;
                     break;
 
                 #endregion AudioNode
-
-                #region Stage control
-
-                case SubType.StageControlNode:
-                    switch (Nodes[currentindex].extraValues[0])
-                    {
-                        case "Spawn":
-                            stageDirection.instance.spawnActors(
-                                int.Parse(Nodes[currentindex].q_string1)
-                                , Nodes[currentindex].q_bool1,
-                                Nodes[currentindex].q_bool2
-                                );
-                            break;
-
-                        case "FlipSide":
-                            stageDirection.instance.FlipSide(int.Parse(Nodes[currentindex].q_string1));
-                            break;
-
-                        case "Move":
-                            stageDirection.instance.MoveActor(
-                                int.Parse(Nodes[currentindex].q_string1), float.Parse(Nodes[currentindex].q_string2)
-                                );
-                            break;
-
-                        case "Flip":
-                            stageDirection.instance.FlipActor(int.Parse(Nodes[currentindex].q_string1));
-                            break;
-
-                        case "SetLevel":
-                            stageDirection.instance.SetLvl(
-                                int.Parse(Nodes[currentindex].q_string1), int.Parse(Nodes[currentindex].q_string2)
-                                );
-                            break;
-                    }
-                    pause = bool.Parse(Nodes[currentindex].extraValues[1]);
-                    break;
-
-                #endregion Stage control
 
                 #region InputNode
 
@@ -761,21 +628,20 @@ namespace OpenDialouge
 
         public static bool InputValue(string Input)
         {
-            GameObject gameObject = GameObject.Find(Nodes[currentindex].q_string1);
-            string ValueName = Nodes[currentindex].q_string2;
-            bool field = Nodes[currentindex].q_bool1;
-            Regex regex = new Regex(Nodes[currentindex].extraValues[1]);
+            GameObject gameObject = GameObject.Find(nodes[currentIndex].q_string1);
+            string ValueName = nodes[currentIndex].q_string2;
+            bool field = nodes[currentIndex].q_bool1;
+            Regex regex = new Regex(nodes[currentIndex].extraValues[1]);
             if (!regex.IsMatch(Input))
             {
                 return false;
             }
             try
             {
-                if (Nodes[currentindex].q_bool1)
+                if (nodes[currentIndex].q_bool1)
                 {
                     FieldInfo ValueObj = UtilityFunctions.GetFields(gameObject).FirstOrDefault(i => i.Name == ValueName);
-                    Debug.Log(ValueObj.FieldType);
-                    switch (Nodes[currentindex].extraValues[0])
+                    switch (nodes[currentIndex].extraValues[0])
                     {
                         case "int":
                             ValueObj.SetValue(gameObject.GetComponent(UtilityFunctions.Type(gameObject, ValueObj)), (int)Convert.ChangeType(Input, ValueObj.FieldType));
@@ -797,7 +663,7 @@ namespace OpenDialouge
                 else
                 {
                     PropertyInfo ValueObj = UtilityFunctions.GetProperties(gameObject).FirstOrDefault(i => i.Name == ValueName);
-                    switch (Nodes[currentindex].extraValues[0])
+                    switch (nodes[currentIndex].extraValues[0])
                     {
                         case "int":
                             ValueObj.SetValue(ValueObj, (int)Convert.ChangeType(Input, ValueObj.PropertyType));
@@ -856,12 +722,12 @@ namespace OpenDialouge
         }
 
         /// <summary>
-        /// Used to retrive the value of needed by some of the ActionNodes
+        /// Used to retrive the value of needed by some of the UtilityNodes
         /// </summary>
         /// <param name="GameObject"></param>
         /// <param name="valuename"></param>
         /// <returns></returns>
-        private static object Value(GameObject gameObject, string valuename, bool type)
+        private static object GetValue(GameObject gameObject, string valuename, bool type)
         {
             var value = new object();
 
@@ -870,7 +736,6 @@ namespace OpenDialouge
                 List<FieldInfo> Fields = UtilityFunctions.GetFields(gameObject);
                 foreach (FieldInfo _m in Fields)
                 {
-                    //Debug.Log(_m.Name);
                     if (_m.Name == valuename)
                     {
                         value = _m.GetValue(gameObject.GetComponent(UtilityFunctions.Type(gameObject, _m)));
@@ -882,7 +747,6 @@ namespace OpenDialouge
                 List<PropertyInfo> Properties = UtilityFunctions.GetProperties(gameObject);
                 foreach (PropertyInfo _m in Properties)
                 {
-                    //Debug.Log(_m.Name);
                     if (_m.Name == valuename)
                     {
                         value = _m.GetValue(gameObject.GetComponent(UtilityFunctions.Type(gameObject, _m)));
@@ -910,13 +774,13 @@ namespace OpenDialouge
 
                 case SubType.ValueChoiceNode:
                     CheckModifiedData();
-                    bool vtype = Nodes[currentindex].q_bool1;
-                    GameObject gameObject = GameObject.Find(Nodes[currentindex].q_string1);
-                    for (int i = 0; i < Nodes[currentindex].dialogueText.Count; i++)
+                    bool vtype = nodes[currentIndex].q_bool1;
+                    GameObject gameObject = GameObject.Find(nodes[currentIndex].q_string1);
+                    for (int i = 0; i < nodes[currentIndex].dialogueText.Count; i++)
                     {
                         int eid = i * 4;
                         //The value from the object
-                        var condition = Convert.ChangeType(Value(gameObject, Extra[eid], vtype), typeof(float));
+                        var condition = Convert.ChangeType(GetValue(gameObject, Extra[eid], vtype), typeof(float));
                         // the value from the choice
                         var contest = Convert.ChangeType(Extra[eid + 3], typeof(float));
                         bool direction = bool.Parse(Extra[eid + 1]);
@@ -960,13 +824,13 @@ namespace OpenDialouge
                     break;
 
                 case SubType.BooleanChoiceNode:
-                    GameObject gameObject1 = GameObject.Find(Nodes[currentindex].q_string1);
-                    for (int i = 0; i < Nodes[currentindex].choices.Count; i++)
+                    GameObject gameObject1 = GameObject.Find(nodes[currentIndex].q_string1);
+                    for (int i = 0; i < nodes[currentIndex].choices.Count; i++)
                     {
                         bool check;
-                        MethodInfo m = GetMethod(gameObject1, Nodes[currentindex].extraValues[i]);
+                        MethodInfo m = GetMethod(gameObject1, nodes[currentIndex].extraValues[i]);
                         ParameterInfo[] ps = m.GetParameters();
-                        string[] inputs = Nodes[currentindex].choices[i].Split(",");
+                        string[] inputs = nodes[currentIndex].choices[i].Split(",");
                         if (ps.Length == 0)
                         {
                             check = (bool)m.Invoke(GetComponent(gameObject1, m), new object[] { });
@@ -985,8 +849,7 @@ namespace OpenDialouge
                             }
                             check = (bool)m.Invoke(GetComponent(gameObject1, m), objects);
                         }
-                        Debug.Log(check);
-                        Unlocks.Add(new(Nodes[currentindex].dialogueText[i], !check));
+                        Unlocks.Add(new(nodes[currentIndex].dialogueText[i], !check));
                     }
 
                     break;
@@ -996,56 +859,60 @@ namespace OpenDialouge
 
         public static void UpdateVocab(string Key, string Value)
         {
-            if (Drecord.Variables.FirstOrDefault(i => i.key == Key) == null)
+            if (dRecord.Variables.FirstOrDefault(i => i.key == Key) == null)
             {
-                Drecord.Variables.Add(new Vocab(Key, Value));
+                dRecord.Variables.Add(new Vocab(Key, Value));
             }
             else
             {
-                Drecord.Variables.FirstOrDefault(i => i.key == Key).value = Value;
+                dRecord.Variables.FirstOrDefault(i => i.key == Key).value = Value;
             }
         }
 
         private static void CheckModifiedData()
         {
-            switch (Nodes[currentindex].subType)
+            switch (nodes[currentIndex].subType)
             {
+                //ForMultiNodes the locked state is kept. in the extra Values we are here checking if we got a key for it 
+                // in our DialogueRecord
+                #region MultiNodes Check
                 case SubType.MultiNode:
-                    for (int i = 0; i < Nodes[currentindex].extraValues.Count; i++)
+                    for (int i = 0; i < nodes[currentIndex].extraValues.Count; i++)
                     {
-                        if (Drecord.ContainsRecord(currentindex, i))
+                        if (dRecord.ContainsRecord(currentIndex, i))
                         {
-                            Nodes[currentindex].extraValues[i] = Drecord.GetrecordValue(currentindex, i).ToString();
+                            nodes[currentIndex].extraValues[i] = dRecord.GetrecordValue(currentIndex, i).ToString();
                         }
                     }
                     break;
-
                 case SubType.ValueChoiceNode:
-                    for (int i = 0; i < Nodes[currentindex].choices.Count; i++)
+                    for (int i = 0; i < nodes[currentIndex].choices.Count; i++)
                     {
-                        if (Drecord.ContainsRecord(currentindex, i))
+                        if (dRecord.ContainsRecord(currentIndex, i))
                         {
-                            Nodes[currentindex].extraValues[(i * 4) + 2] = Nodes[currentindex].extraValues[i] = Drecord.GetrecordValue(currentindex, i).ToString();
+                            nodes[currentIndex].extraValues[(i * 4) + 2] = nodes[currentIndex].extraValues[i] = dRecord.GetrecordValue(currentIndex, i).ToString();
                         }
                     }
                     break;
-
+                #endregion
+                #region SingleNodes Check
+                // the locked check for single nodes is releated to the lineIndex
                 case SubType.SingleNode:
-                    int nodeid = (CommentIndex * 3) + 2;
-                    if (Drecord.ContainsRecord(currentindex, CommentIndex))
+                    int nodeid = (lineIndex * 3) + 2;
+                    if (dRecord.ContainsRecord(currentIndex, lineIndex))
                     {
-                        Nodes[currentindex].extraValues[nodeid] = Nodes[currentindex].extraValues[nodeid] = Drecord.GetrecordValue(currentindex, CommentIndex).ToString();
+                        nodes[currentIndex].extraValues[nodeid] = nodes[currentIndex].extraValues[nodeid] = dRecord.GetrecordValue(currentIndex, lineIndex).ToString();
                     }
                     break;
+                #endregion
             }
         }
 
-        public static DialogueData loadDialogue(string name)
+        public static DialogueData LoadDialogue(string name)
         {
             var savefile = Resources.Load<TextAsset>($"DialoguesData/{name}");
             if (savefile != null)
             {
-                Debug.Log("dataLoadded");
                 return JsonUtility.FromJson<DialogueData>(savefile.text);
             }
             else
@@ -1068,11 +935,11 @@ namespace OpenDialouge
             DialogueRecord r = s.Choices.FirstOrDefault(i => i.title == data.Name);
             if (r == null)
             {
-                s.Choices.Add(Drecord);
+                s.Choices.Add(dRecord);
             }
             else
             {
-                r.UpdateRecord(Drecord);
+                r.UpdateRecord(dRecord);
             }
             string jsondata = JsonUtility.ToJson(s);
             File.WriteAllText(savefile, jsondata);
@@ -1111,16 +978,16 @@ namespace OpenDialouge
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public static Dictionary<int, NodeDB> NodeDictionary(NodeDB[] nodes)
+        public static Dictionary<int, LineData> NodeDictionary(LineData[] nodes)
         {
-            Dictionary<int, NodeDB> nodeD = new Dictionary<int, NodeDB>();
-            foreach (NodeDB n in nodes)
+            Dictionary<int, LineData> nodeD = new Dictionary<int, LineData>();
+            foreach (LineData n in nodes)
             {
                 nodeD.Add(n.id, n);
             }
             return nodeD;
         }
-        private static float booleanConvert(object o)
+        private static float BooleanConvert(object o)
         {
             float value;
             if (o.GetType() == typeof(bool))

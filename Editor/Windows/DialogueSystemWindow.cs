@@ -37,7 +37,7 @@ namespace OpenDialouge.Windows
                 FileNameTextField.value = Dname.Split(".")[0]; 
             }
             Button SaveButton = ODtoolsElementUtilities.CreateButton("Save", () => {
-                dSGraphView.save(FileNameTextField.text);
+                dSGraphView.Save(FileNameTextField.text);
                 save.style.backgroundColor= new Color(0.345098f, 0.345098f, 0.345098f,1);
                 save.style.color=Color.white;
             });

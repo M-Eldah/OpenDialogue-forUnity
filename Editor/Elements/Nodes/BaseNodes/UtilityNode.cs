@@ -8,7 +8,7 @@ namespace OpenDialouge.Elements
     using UnityEditor.Experimental.GraphView;
     using utilities;
     /// <summary>
-    /// The Parent class for all Utility Nodes
+    /// The Parent class for all Utility Lines
     /// </summary>
     public class UtilityNode : BaseNode
     {
@@ -28,7 +28,7 @@ namespace OpenDialouge.Elements
             }
 
         }
-        public virtual void Initialize(Vector2 Pos, DSGraphView graph, NodeDB dB)
+        public virtual void Initialize(Vector2 Pos, DSGraphView graph, LineData dB)
         {
             Debug.Log("Intializae");
             Initialize(Pos, graph);

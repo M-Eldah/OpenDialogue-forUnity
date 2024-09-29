@@ -18,7 +18,7 @@ public class DialogueHandeler : MonoBehaviour
     [SerializeField]
     public DialogueValues data;
     [SerializeField]
-    public NodeDB[] nodes;
+    public LineData[] nodes;
     public DialogueValues DialogueData 
     { 
         get {
@@ -60,6 +60,6 @@ public class DialogueHandeler : MonoBehaviour
     public void Cleardata()
     {
         data =new DialogueValues();
-        nodes= new NodeDB[0];
+        nodes= new LineData[0];
     }
 }

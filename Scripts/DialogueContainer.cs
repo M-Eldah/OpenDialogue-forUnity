@@ -10,19 +10,19 @@ public struct DialogueValues
 {
     public string Name;
     public int startIndex;
-    public NodeDB[] nodes;
+    public LineData[] nodes;
     public DialogueValues(int leaveEmpty=-1)
     {
         Name= string.Empty;
         startIndex = -1;
-        nodes = new NodeDB[0];
+        nodes = new LineData[0];
     }
     public DialogueValues(DialogueData data)
     {
         Name = data.name;
         startIndex=data.startIndex;
         
-        nodes=data.Nodes.ToArray();
+        nodes=data.Lines.ToArray();
     }
 }
 //The class used to save the Dialogue
@@ -33,14 +33,14 @@ public class DialogueData
     public int id;
     public int startIndex;
     [SerializeField]
-    public List<NodeDB> Nodes;
+    public List<LineData> Lines;
     [SerializeField]
     public List<GroupsDB> Group;
     public int groudid;
 }
-//The class used to save the Nodes
+//The class used to save the Lines
 [System.Serializable]
-public class NodeDB
+public class LineData
 {
     public string name;
 
@@ -68,7 +68,7 @@ public class NodeDB
     public bool q_bool2;
 
     public string Tag;
-    public NodeDB()
+    public LineData()
     {
         dialogueText = new List<string>();
         extraValues = new List<string>();
@@ -77,7 +77,7 @@ public class NodeDB
 
     }
 
-    public NodeDB(string name, int id, List<string> dialogueText, List<string> extraValues, List<string> choices, Vector2 pos, NodeType nodeType, List<int> connectedNodes, SubType subType, string q_string1, string q_string2, bool q_bool1, bool q_bool2, string tag)
+    public LineData(string name, int id, List<string> dialogueText, List<string> extraValues, List<string> choices, Vector2 pos, NodeType nodeType, List<int> connectedNodes, SubType subType, string q_string1, string q_string2, bool q_bool1, bool q_bool2, string tag)
     {
         this.name = name;
         this.id = id;
@@ -95,9 +95,9 @@ public class NodeDB
         this.Tag = tag;
     }
 
-    public NodeDB Clone(int id)
+    public LineData Clone(int id)
     {
-        NodeDB node = new NodeDB();
+        LineData node = new LineData();
         node.id = id;
         node.name= $"{subType}-ID:{id}";
         node.dialogueText.AddRange(dialogueText);

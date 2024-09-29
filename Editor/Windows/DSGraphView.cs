@@ -40,7 +40,7 @@ namespace OpenDialouge
             AddGridBackground();
             AddSearchwindow();
             OndeleteElements();
-            addStyles();
+            AddStyles();
             Nodes = new Dictionary<int, BaseNode>();
             Undo.undoRedoPerformed += ReloadGraph;
         }
@@ -49,7 +49,7 @@ namespace OpenDialouge
         {
             if (evt.ctrlKey && evt.keyCode == KeyCode.C)
             {
-                copySelection();
+                CopySelection();
             }
         }
 
@@ -86,7 +86,7 @@ namespace OpenDialouge
         {
             if (evt.ctrlKey && evt.keyCode == KeyCode.S)
             {
-                save(data.name);
+                Save(data.name);
             }
         }
 
@@ -163,7 +163,7 @@ namespace OpenDialouge
         {
             ContextualMenuManipulator contextualMenu = new ContextualMenuManipulator
             (
-                menuEvent => menuEvent.menu.AppendAction("Copynode", actionEvent => copySelection())
+                menuEvent => menuEvent.menu.AppendAction("Copynode", actionEvent => CopySelection())
             );
             return contextualMenu;
         }
@@ -247,7 +247,7 @@ namespace OpenDialouge
                     }
 
                     Nodes.Add(node.data.id, node);
-                    data.Nodes.Add(node.data);
+                    data.Lines.Add(node.data);
                     if (port != null)
                     {
                         AddElement(port.port.ConnectTo(node.inputport));
@@ -276,7 +276,7 @@ namespace OpenDialouge
                             group.AddElement(Utilitynode);
                         }
                     }
-                    data.Nodes.Add(Utilitynode.data);
+                    data.Lines.Add(Utilitynode.data);
                     Nodes.Add(Utilitynode.data.id, Utilitynode);
 
                     if (port != null)
@@ -293,7 +293,7 @@ namespace OpenDialouge
             Change.Invoke();
         }
 
-        public void loadNode(Vector2 _pos, NodeDB db, bool addtodata = false)
+        public void LoadNode(Vector2 _pos, LineData db, bool addtodata = false)
         {
             SubType subType = db.subType;
             Type nodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
@@ -315,7 +315,7 @@ namespace OpenDialouge
                     AddElement(dNode);
                     Nodes.Add(dNode.data.id, dNode);
                     if (addtodata)
-                        data.Nodes.Add(dNode.data);
+                        data.Lines.Add(dNode.data);
                     break;
 
                 case NodeType.UtilityNode:
@@ -326,13 +326,13 @@ namespace OpenDialouge
                     AddElement(UNode);
                     Nodes.Add(UNode.data.id, UNode);
                     if (addtodata)
-                        data.Nodes.Add(UNode.data);
+                        data.Lines.Add(UNode.data);
                     break;
             }
         }
 
         //Still Untested but should be faster than the Casting used in the normal Load
-        public void QuickLoad(Vector2 _pos, NodeDB db, bool addtodata = false)
+        public void QuickLoad(Vector2 _pos, LineData db, bool addtodata = false)
         {
             SubType subType = db.subType;
             Type nodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
@@ -347,7 +347,7 @@ namespace OpenDialouge
                     AddElement(snode);
                     Nodes.Add(snode.data.id, snode);
                     if (addtodata)
-                        data.Nodes.Add(snode.data);
+                        data.Lines.Add(snode.data);
                     break;
 
                 case SubType.RandomNode:
@@ -357,7 +357,7 @@ namespace OpenDialouge
                     AddElement(Rnode);
                     Nodes.Add(Rnode.data.id, Rnode);
                     if (addtodata)
-                        data.Nodes.Add(Rnode.data);
+                        data.Lines.Add(Rnode.data);
                     break;
 
                 case SubType.MRandomNode:
@@ -367,7 +367,7 @@ namespace OpenDialouge
                     AddElement(MRnode);
                     Nodes.Add(MRnode.data.id, MRnode);
                     if (addtodata)
-                        data.Nodes.Add(MRnode.data);
+                        data.Lines.Add(MRnode.data);
                     break;
 
                 case SubType.MultiNode:
@@ -377,7 +377,7 @@ namespace OpenDialouge
                     AddElement(lcnode);
                     Nodes.Add(lcnode.data.id, lcnode);
                     if (addtodata)
-                        data.Nodes.Add(lcnode.data);
+                        data.Lines.Add(lcnode.data);
                     break;
 
                 case SubType.ValueChoiceNode:
@@ -387,7 +387,7 @@ namespace OpenDialouge
                     AddElement(vcnode);
                     Nodes.Add(vcnode.data.id, vcnode);
                     if (addtodata)
-                        data.Nodes.Add(vcnode.data);
+                        data.Lines.Add(vcnode.data);
                     break;
 
                 case SubType.ScriptNode:
@@ -397,7 +397,7 @@ namespace OpenDialouge
                     AddElement(scriptnode);
                     Nodes.Add(scriptnode.data.id, scriptnode);
                     if (addtodata)
-                        data.Nodes.Add(scriptnode.data);
+                        data.Lines.Add(scriptnode.data);
                     break;
 
                 case SubType.ValueDirectionNode:
@@ -407,7 +407,7 @@ namespace OpenDialouge
                     AddElement(vdnode);
                     Nodes.Add(vdnode.data.id, vdnode);
                     if (addtodata)
-                        data.Nodes.Add(vdnode.data);
+                        data.Lines.Add(vdnode.data);
                     break;
                 //Action
                 case SubType.ActionNode:
@@ -417,7 +417,7 @@ namespace OpenDialouge
                     AddElement(Anode);
                     Nodes.Add(Anode.data.id, Anode);
                     if (addtodata)
-                        data.Nodes.Add(Anode.data);
+                        data.Lines.Add(Anode.data);
                     break;
 
                 case SubType.Valuechangenode:
@@ -427,7 +427,7 @@ namespace OpenDialouge
                     AddElement(pnode);
                     Nodes.Add(pnode.data.id, pnode);
                     if (addtodata)
-                        data.Nodes.Add(pnode.data);
+                        data.Lines.Add(pnode.data);
                     break;
 
                 case SubType.ChoiceUnlockNode:
@@ -437,7 +437,7 @@ namespace OpenDialouge
                     AddElement(cunode);
                     Nodes.Add(cunode.data.id, cunode);
                     if (addtodata)
-                        data.Nodes.Add(cunode.data);
+                        data.Lines.Add(cunode.data);
                     break;
 
                 case SubType.StartChangeNode:
@@ -447,7 +447,7 @@ namespace OpenDialouge
                     AddElement(scnode);
                     Nodes.Add(scnode.data.id, scnode);
                     if (addtodata)
-                        data.Nodes.Add(scnode.data);
+                        data.Lines.Add(scnode.data);
                     break;
                 //Audio
                 case SubType.AudioNode:
@@ -457,7 +457,7 @@ namespace OpenDialouge
                     AddElement(Aunode);
                     Nodes.Add(Aunode.data.id, Aunode);
                     if (addtodata)
-                        data.Nodes.Add(Aunode.data);
+                        data.Lines.Add(Aunode.data);
                     break;
 
                 case SubType.AnimationNode:
@@ -468,22 +468,13 @@ namespace OpenDialouge
                     AddElement(Aniode);
                     Nodes.Add(Aniode.data.id, Aniode);
                     if (addtodata)
-                        data.Nodes.Add(Aniode.data);
+                        data.Lines.Add(Aniode.data);
                     break;
 
-                case SubType.StageControlNode:
-                    DSStageControlNode dscontrolnode = new DSStageControlNode();
-                    dscontrolnode.Initialize(_pos, this, db);
-                    dscontrolnode.Draw();
-                    AddElement(dscontrolnode);
-                    Nodes.Add(dscontrolnode.data.id, dscontrolnode);
-                    if (addtodata)
-                        data.Nodes.Add(dscontrolnode.data);
-                    break;
             }
         }
 
-        private void loadGroup(string name, Vector2 pos, List<int> nodes)
+        private void LoadGroup(string name, Vector2 pos, List<int> nodes)
         {
             DSGroup group = new DSGroup()
             {
@@ -540,7 +531,7 @@ namespace OpenDialouge
                 data.id = 0;
                 data.startIndex = 0;
                 data.groudid = 0;
-                data.Nodes.Clear();
+                data.Lines.Clear();
                 data.Group.Clear();
             }
             Nodes.Clear();
@@ -558,7 +549,7 @@ namespace OpenDialouge
             return LocalMousepos;
         }
 
-        private void copySelection()
+        private void CopySelection()
         {
             Undo.RecordObject(container, "Copy Nodes");
             Dictionary<int, int> Mapper = new Dictionary<int, int>();
@@ -586,10 +577,10 @@ namespace OpenDialouge
             foreach (BaseNode node in b)
             {
                 Vector2 Cpos = new Vector2(100, 100) + node.data.pos;
-                NodeDB nd = node.data.Clone(data.id);
+                LineData nd = node.data.Clone(data.id);
                 id.Add(nd.id);
                 nd.reMapConnections(Mapper);
-                loadNode(Cpos, nd, true);
+                LoadNode(Cpos, nd, true);
                 data.id++;
             }
 
@@ -649,7 +640,7 @@ namespace OpenDialouge
                 Undo.RecordObject(container, "Delete Nodes");
                 foreach (BaseNode Node in DeletedNodes)
                 {
-                    data.Nodes.Remove(Node.data);
+                    data.Lines.Remove(Node.data);
                     Nodes.Remove(Node.data.id);
                     DeletedEdges.AddRange(Node.Edges());
                 }
@@ -681,7 +672,7 @@ namespace OpenDialouge
             };
         }
 
-        public void save(string dialogueName)
+        public void Save(string dialogueName)
         {
             saved = true;
             data.name = dialogueName;
@@ -702,13 +693,13 @@ namespace OpenDialouge
 
         private void DrawGraph(DialogueData dialogue, bool addtodata)
         {
-            List<NodeDB> dnodes = new List<NodeDB>();
-            dnodes.AddRange(dialogue.Nodes);
-            data.Nodes.Clear();
+            List<LineData> dnodes = new List<LineData>();
+            dnodes.AddRange(dialogue.Lines);
+            data.Lines.Clear();
             data.Group.Clear();
-            foreach (NodeDB node in dnodes)
+            foreach (LineData node in dnodes)
             {
-                loadNode(node.pos, node, addtodata);
+                LoadNode(node.pos, node, addtodata);
             }
 
             foreach (BaseNode node in nodes.ToList())
@@ -723,14 +714,14 @@ namespace OpenDialouge
             groups.AddRange(dialogue.Group);
             foreach (GroupsDB groupDB in groups)
             {
-                loadGroup(groupDB.GroupName, groupDB.Position, groupDB.ContainedNodes);
+                LoadGroup(groupDB.GroupName, groupDB.Position, groupDB.ContainedNodes);
             }
         }
 
         #endregion Utilities
 
         // the refrence to where the styles files are
-        private void addStyles()
+        private void AddStyles()
         {
             StyleSheet GraphstyleSheet = (StyleSheet)EditorGUIUtility.Load("Assets/OpenDialogue/Editor/StyleSheet/DsGraphStyle.uss");
             StyleSheet NodestyleSheet = (StyleSheet)EditorGUIUtility.Load("Assets/OpenDialogue/Editor/StyleSheet/DsNodeStyleSheet.uss");

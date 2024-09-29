@@ -20,11 +20,12 @@ namespace OpenDialouge.Elements
             prop= new List<DropdownField>();
             valueName = new List<string>();
             base.Initialize(Pos, graph);
+            data.NodeType = NodeType.UtilityNode;
             data.subType = SubType.ValueChoiceNode;
             AddToClassList("MultiNode");
         }
 
-        public override void Initialize(Vector2 Pos, DSGraphView graph, NodeDB db)
+        public override void Initialize(Vector2 Pos, DSGraphView graph, LineData db)
         {
             Initialize(Pos, graph);
             data = db;
