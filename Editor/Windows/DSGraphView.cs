@@ -687,6 +687,12 @@ namespace OpenDialouge
             DrawGraph(dialogue, true);
             data.id = dialogue.id;
             data.startIndex = dialogue.startIndex;
+            this.AddToSelection(nodes.ToArray().Last());
+            this.viewTransform.position=Nodes.Last().Value.GetPosition().position;
+            SetupZoom(1, 3, 1, 0.5f);
+            FrameSelection();
+            SetupZoom(0.1f, 3, 1, 0.5f);
+            ClearSelection();
             data.name = dialogue.name;
             return data.startIndex;
         }

@@ -75,6 +75,10 @@ namespace OpenDialouge.Windows
             Button ClearGraph = ODtoolsElementUtilities.CreateButton("Clear Graph", () => {
                 dSGraphView.ClearGraph();
             });
+            Button FocusOrigin = ODtoolsElementUtilities.CreateButton("Focus Origin", () => {
+                dSGraphView.FrameOrigin();
+            });
+
             dSGraphView.Change.AddListener(delegate () { checkgraph(); });
             toolbar.Add(FileNameTextField);
             toolbar.Add(SaveButton);
@@ -82,6 +86,7 @@ namespace OpenDialouge.Windows
             toolbar.Add(LoadButton);
             toolbar.Add(StartingIndex);
             toolbar.Add(ClearGraph);
+            toolbar.Add(FocusOrigin);
             rootVisualElement.Add(toolbar);
         }
 
