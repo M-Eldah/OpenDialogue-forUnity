@@ -1,10 +1,11 @@
 
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 public class ExampleScript : MonoBehaviour
 {
     public TextMeshProUGUI textMeshPro;
-    private float    floatfieldEx;
+    private float   floatfieldEx;
     public bool     boolfieldEx;
     public int      intfieldEx;
     public int      intfieldEx2;
@@ -48,4 +49,5 @@ public class ExampleScript : MonoBehaviour
     {
         return "the observatory";
     }
+   
 }

@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using OpenDialouge;
+using OpenDialogue;
+using UnityEngine.SceneManagement;
 public class DemoScript : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        DialogueSystem.Load("Dialogue");   
+  
     }
 
     // Update is called once per frame
@@ -26,5 +27,13 @@ public class DemoScript : MonoBehaviour
             }
 
         }
+    }
+    public void AddKey()
+    {
+        DialogueSystem.AddKey("MetDamos", "Didn't MetHim");
+    }
+    public void SwitchScene(int i)
+    {
+        SceneManager.LoadScene(i);
     }
 }

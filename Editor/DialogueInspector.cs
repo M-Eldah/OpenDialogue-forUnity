@@ -1,4 +1,4 @@
-using OpenDialouge.Windows;
+using OpenDialogue.Windows;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace OpenDialouge.Inspector
+namespace OpenDialogue.Inspector
 {
     [CustomEditor(typeof(DialogueHandeler))]
     public class DialogueInspector : Editor

@@ -1,7 +1,7 @@
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
-namespace OpenDialouge.utilities
+namespace OpenDialogue.utilities
 {
     using Elements;
     using UnityEditor.UIElements;
@@ -104,7 +104,7 @@ namespace OpenDialouge.utilities
 
             return textArea;
         }
-        public static TextField CreateTextField(string value=null,EventCallback<ChangeEvent<string>> onValueChanged = null, EventCallback<KeyDownEvent> keydownevent = null)
+        public static TextField CreateTextField(string value=null,EventCallback<ChangeEvent<string>> onValueChanged = null, EventCallback<KeyUpEvent> onKeyUpEvent = null)
         {
             TextField textField = new TextField()
             {
@@ -116,20 +116,20 @@ namespace OpenDialouge.utilities
             {
                 textField.RegisterValueChangedCallback(onValueChanged);
             }
-            if(keydownevent!=null)
+            if(onKeyUpEvent!=null)
             {
-                textField.RegisterCallback<KeyDownEvent>(keydownevent);
+                textField.RegisterCallback<KeyUpEvent>(onKeyUpEvent);
             }
             
             return textField;
         }
-        public static TextField CreateTextArea(string value = null, EventCallback<ChangeEvent<string>> onValueChanged = null, EventCallback<KeyDownEvent> keydownevent=null)
+        public static TextField CreateTextArea(string value = null, EventCallback<ChangeEvent<string>> onValueChanged = null, EventCallback<KeyUpEvent> onKeyUpEvent=null)
         {
-            TextField textArea = CreateTextField(value, onValueChanged,keydownevent);
+            TextField textArea = CreateTextField(value, onValueChanged,onKeyUpEvent);
 
             return textArea;
         }
-        public static TextField CreateTextField(string value = null, EventCallback<ChangeEvent<string>> onValueChanged = null, EventCallback<KeyDownEvent>[] keydownevents = null)
+        public static TextField CreateTextField(string value = null, EventCallback<ChangeEvent<string>> onValueChanged = null, EventCallback<KeyUpEvent>[] onKeyUpEvent = null)
         {
             TextField textField = new TextField()
             {
@@ -141,17 +141,17 @@ namespace OpenDialouge.utilities
             {
                 textField.RegisterValueChangedCallback(onValueChanged);
             }
-            if (keydownevents != null)
+            if (onKeyUpEvent != null)
             {
-                foreach (EventCallback<KeyDownEvent> keydown in keydownevents)
-                { textField.RegisterCallback<KeyDownEvent>(keydown); }
+                foreach (EventCallback<KeyUpEvent> keydown in onKeyUpEvent)
+                { textField.RegisterCallback<KeyUpEvent>(keydown); }
             }
 
             return textField;
         }
-        public static TextField CreateTextArea(string value = null, EventCallback<ChangeEvent<string>> onValueChanged = null, EventCallback<KeyDownEvent>[] keydownevents = null)
+        public static TextField CreateTextArea(string value = null, EventCallback<ChangeEvent<string>> onValueChanged = null, EventCallback<KeyUpEvent>[] onKeyUpEvent = null)
         {
-            TextField textArea = CreateTextField(value, onValueChanged, keydownevents);
+            TextField textArea = CreateTextField(value, onValueChanged, onKeyUpEvent);
 
             return textArea;
         }

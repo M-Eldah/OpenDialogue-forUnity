@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using OpenDialouge;
+using OpenDialogue;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -96,7 +96,7 @@ public class OpenDialogueController : MonoBehaviour
 
     private void End()
     {
-        DialogueSystem.Save("Dialogue");
+        //DialogueSystem.Save("Dialogue");
         //Ending the dialogue
         single.SetActive(false);
         multi.SetActive(false);
@@ -318,6 +318,12 @@ public class OpenDialogueController : MonoBehaviour
             dialogueText.maxVisibleCharacters++;
         }
         animatingText = false;
+    }
+
+    private void OnApplicationQuit()
+    {
+        Debug.Log("Quit");
+        DialogueSystem.ActiveDialougeSave.Dialogues.Clear();
     }
 
     #endregion dialogueController

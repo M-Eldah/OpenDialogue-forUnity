@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     using UnityEditor.Experimental.GraphView;
     using utilities;

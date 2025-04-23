@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     using System.Reflection;
     using UnityEditor.Experimental.GraphView;

@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Reflection;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     using utilities;
 

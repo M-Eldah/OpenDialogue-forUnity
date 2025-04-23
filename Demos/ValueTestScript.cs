@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using OpenDialouge;
+using OpenDialogue;
 
 public class ValueTestScript : MonoBehaviour
 {
@@ -23,7 +23,7 @@ public class ValueTestScript : MonoBehaviour
     }
     public void AddKey(string key)
     {
-        DialogueSystem.UpdateVocab($"{key}", Value);
+        DialogueSystem.AddKey($"{key}", Value);
     }
 
     public bool CheckTest(int i)

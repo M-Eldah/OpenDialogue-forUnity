@@ -1,0 +1,98 @@
+{
+    "name": "TestDialogue",
+    "id": 3,
+    "startIndex": 0,
+    "Lines": [
+        {
+            "name": "SingleNode-ID:0",
+            "id": 0,
+            "dialogueText": [
+                "Dialogue1"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 338.0,
+                "y": 301.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                1
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:1",
+            "id": 1,
+            "dialogueText": [
+                "Dialogue2",
+                "Dialogue3"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "True",
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 719.0,
+                "y": 301.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                2
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "ChoiceUnlockNode-ID:2",
+            "id": 2,
+            "dialogueText": [],
+            "extraValues": [
+                "0",
+                "1",
+                ""
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 974.0,
+                "y": 372.0
+            },
+            "subType": 5,
+            "NodeType": 1,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "TestDialogue.json",
+            "q_string2": "1",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        }
+    ],
+    "Group": [],
+    "groudid": 0
+}

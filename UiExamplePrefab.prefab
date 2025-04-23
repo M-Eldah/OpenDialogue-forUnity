@@ -1306,7 +1306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OverRideStartNode: -1
-  DialogueName: TestGraph
+  DialogueName: 
   index: 3
   data:
     Name: 

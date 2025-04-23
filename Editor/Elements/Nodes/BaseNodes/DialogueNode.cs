@@ -3,8 +3,9 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
+    using System;
     using System.Linq;
     using utilities;
     /// <summary>
@@ -110,9 +111,9 @@ namespace OpenDialouge.Elements
             customDataContainer.Add(textfoldout);
             extensionContainer.Add(customDataContainer);
         }
-        //ForNodes whith choices
         private void AddChoice()
         {
+            Debug.Log("Here");
             if (skipable)
             {
                 data.dialogueText.Add($"Dialogue{data.dialogueText.Count}");
@@ -135,42 +136,42 @@ namespace OpenDialouge.Elements
         //**Check what the fuck skip does in Dialogue system Main file
         private void CreateDialogueContainer(string text, string extra, string extra2, string extra3)
         {
-            VisualElement cont = new VisualElement();
-            TextField textField = ODtoolsElementUtilities.CreateTextArea(text, evt => { int index = Getindex(cont); data.dialogueText[index] = evt.newValue; }, KeyboardCombo);
-            textField.RegisterCallback<KeyDownEvent, VisualElement>(KeyboardCombo2, cont);
-            textField.AddToClassList("Speachdial    ougeText");
+            VisualElement dialogueContainer = new VisualElement();
+            TextField textField = ODtoolsElementUtilities.CreateTextArea(text, evt => { int index = Getindex(dialogueContainer); data.dialogueText[index] = evt.newValue; }, KeyboardCombo);
+            textField.RegisterCallback<KeyDownEvent, VisualElement>(KeyboardCombo2, dialogueContainer);
+            textField.AddToClassList("SpeachdialougeText");
             Foldout Extra = ODtoolsElementUtilities.CreateFoldout("Extra", true);
-            TextField Actor = ODtoolsElementUtilities.CreateTextField(extra, evt => { int index = Getindex(cont); data.extraValues[(index * 3)] = evt.newValue; });
+            TextField Actor = ODtoolsElementUtilities.CreateTextField(extra, evt => { int index = Getindex(dialogueContainer); data.extraValues[(index * 3)] = evt.newValue; });
             Actor.label = "Actor";
-            TextField id = ODtoolsElementUtilities.CreateTextField(extra2, evt => { int index = Getindex(cont); data.extraValues[(index * 3) + 1] = evt.newValue; });
+            TextField id = ODtoolsElementUtilities.CreateTextField(extra2, evt => { int index = Getindex(dialogueContainer); data.extraValues[(index * 3) + 1] = evt.newValue; });
             id.label = "FaceID";
 
-            Toggle toggle = ODtoolsElementUtilities.CreateToggle("Skip", evt => { int index = Getindex(cont); data.extraValues[(index * 3) + 2] = evt.newValue.ToString(); });
+            Toggle toggle = ODtoolsElementUtilities.CreateToggle("Skip", evt => { int index = Getindex(dialogueContainer); data.extraValues[(index * 3) + 2] = evt.newValue.ToString(); });
             toggle.value = bool.Parse(extra3);
             Button Delte = ODtoolsElementUtilities.CreateButton("Remove Dialogue", () =>
             {
-                DeleteEntry(cont);
+                DeleteEntry(dialogueContainer);
             });
 
             Button SwapUp = ODtoolsElementUtilities.CreateButton("SwapUp", () =>
             {
-                MoveEntry(cont,-1);
+                MoveEntry(dialogueContainer,-1);
             });
             Button SwapDown = ODtoolsElementUtilities.CreateButton("SwapDown", () =>
             {
-                MoveEntry(cont, +1);
+                MoveEntry(dialogueContainer, +1);
             });
 
             Extra.Add(Actor);
             Extra.Add(id);
             Extra.Add(toggle);
             Extra.Add(Delte);
-            cont.Add(textField);
-            cont.Add(Extra);
-            cont.Add(SwapUp);
-            cont.Add(SwapDown);
-            cont.AddToClassList("singledialougeholder");
-            textfoldout.Add(cont);
+            dialogueContainer.Add(textField);
+            dialogueContainer.Add(Extra);
+            dialogueContainer.Add(SwapUp);
+            dialogueContainer.Add(SwapDown);
+            dialogueContainer.AddToClassList("singledialougeholder");
+            textfoldout.Add(dialogueContainer);
             textField.Focus();
         }
         /// <summary>
@@ -240,7 +241,7 @@ namespace OpenDialouge.Elements
         private void CreateDialougeContainer(string text, string extra, string extra2)
         {
             VisualElement cont = new VisualElement();
-            TextField textField = ODtoolsElementUtilities.CreateTextArea(text, evt => { int index = Getindex(cont); data.dialogueText[index] = evt.newValue; }, KeyboardCombo );
+            TextField textField = ODtoolsElementUtilities.CreateTextField(text, evt => { int index = Getindex(cont); Debug.Log("Here"); data.dialogueText[index] = evt.newValue; }, KeyboardCombo );
             textField.RegisterCallback<KeyDownEvent, VisualElement>(KeyboardCombo2, cont);
             textField.AddToClassList("SpeachdialougeText");
             textField.AddToClassList("SpeachdialougeText");
@@ -270,6 +271,7 @@ namespace OpenDialouge.Elements
         //Get index of a certain used in deleting Dialogue and reanranging 
         private int Getindex(VisualElement text)
         {
+            
             int index = textfoldout.Children().ToList().IndexOf(text);
             return index;
         }
@@ -277,12 +279,16 @@ namespace OpenDialouge.Elements
         /// Adding a new choice when pressing alt and e
         /// </summary>
         /// <param name="e"></param>
-        void KeyboardCombo(KeyDownEvent e)
+        void KeyboardCombo(KeyUpEvent e)
         {
             
             if (e.altKey && e.keyCode == KeyCode.N)
             {
                 AddChoice();
+            }
+            else
+            {
+                Debug.Log("HeyYa");
             }
         }
         /// <summary>

@@ -3,7 +3,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     using System;
     using System.Linq;
@@ -119,7 +119,7 @@ namespace OpenDialouge.Elements
 
         #endregion Choice Element Creation
 
-        private void KeyboardCombo(KeyDownEvent e)
+        private void KeyboardCombo(KeyUpEvent e)
         {
             if (e.altKey && e.keyCode == KeyCode.N)
             {

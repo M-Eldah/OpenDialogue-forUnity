@@ -1,4 +1,4 @@
-using OpenDialouge;
+using OpenDialogue;
 using System.IO;
 using UnityEngine;
 using UnityEditor;

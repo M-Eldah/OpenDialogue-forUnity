@@ -2,7 +2,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     using System.Linq;
     using utilities;
@@ -309,7 +309,7 @@ namespace OpenDialouge.Elements
         {
             return output.FindIndex(x => x == port);
         }
-        private void KeyboardCombo(KeyDownEvent e)
+        private void KeyboardCombo(KeyUpEvent e)
         {
             if (e.altKey && e.keyCode == KeyCode.N)
             {

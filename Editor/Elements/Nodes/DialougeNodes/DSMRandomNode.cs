@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     using System.Reflection;
     using UnityEngine.UIElements;

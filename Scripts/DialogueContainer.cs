@@ -116,7 +116,7 @@ public class LineData
         return node;
     }
 
-    public void reMapConnections(Dictionary<int,int> mapper)
+    public void ReMapConnections(Dictionary<int,int> mapper)
     {
         for (int i = 0; i < ConnectedNodes.Count; i++)
         {

@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     using UnityEditor.UIElements;
     using UnityEngine.UIElements;

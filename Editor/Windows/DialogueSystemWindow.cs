@@ -1,4 +1,4 @@
-using OpenDialouge.utilities;
+using OpenDialogue.utilities;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Windows
+namespace OpenDialogue.Windows
 {
     
     public class DialogueSystemWindow : EditorWindow

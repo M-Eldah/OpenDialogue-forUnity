@@ -1,13 +1,13 @@
 {
     "name": "Hello",
-    "id": 2,
+    "id": 0,
     "startIndex": 0,
     "Lines": [
         {
             "name": "SingleNode-ID:0",
             "id": 0,
             "dialogueText": [
-                "Hello"
+                "asd"
             ],
             "extraValues": [
                 "0",
@@ -18,37 +18,8 @@
                 "Dialouge"
             ],
             "pos": {
-                "x": 217.0,
-                "y": 131.0
-            },
-            "subType": 0,
-            "NodeType": 0,
-            "ConnectedNodes": [
-                1
-            ],
-            "q_string1": "",
-            "q_string2": "",
-            "q_bool1": false,
-            "q_bool2": false,
-            "Tag": ""
-        },
-        {
-            "name": "SingleNode-ID:1",
-            "id": 1,
-            "dialogueText": [
-                "Does this work?"
-            ],
-            "extraValues": [
-                "0",
-                "0",
-                "False"
-            ],
-            "choices": [
-                "Dialouge"
-            ],
-            "pos": {
-                "x": 512.0,
-                "y": 180.0
+                "x": 453.0,
+                "y": 118.0
             },
             "subType": 0,
             "NodeType": 0,

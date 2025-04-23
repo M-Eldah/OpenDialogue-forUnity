@@ -1,10 +1,10 @@
-using OpenDialouge.utilities;
+using OpenDialogue.utilities;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     public class DSInputNode : UtilityNode
     {

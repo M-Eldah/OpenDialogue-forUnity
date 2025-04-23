@@ -6,9 +6,9 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge
+namespace OpenDialogue
 {
-    using OpenDialouge.Windows;
+    using OpenDialogue.Windows;
     using Elements;
     using UnityEngine.Events;
 
@@ -222,7 +222,7 @@ namespace OpenDialouge
             {
                 case NodeType.DialogueNode:
                     Undo.RecordObject(container, $"Creating {subType}");
-                    Type nodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
+                    Type nodeType = Type.GetType($"OpenDialogue.Elements.DS{subType}");
                     DialogueNode node = (DialogueNode)Activator.CreateInstance(nodeType);
                     node.title = $"{subType}-ID:{data.id}";
                     node.data.name = node.title;
@@ -260,7 +260,7 @@ namespace OpenDialouge
 
                 case NodeType.UtilityNode:
                     Undo.RecordObject(container, $"Creating {subType}");
-                    Type UtilitynodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
+                    Type UtilitynodeType = Type.GetType($"OpenDialogue.Elements.DS{subType}");
                     UtilityNode Utilitynode = (UtilityNode)Activator.CreateInstance(UtilitynodeType);
                     Utilitynode.title = $"{subType}-ID:{data.id}";
                     Utilitynode.data.name = Utilitynode.title;
@@ -296,7 +296,7 @@ namespace OpenDialouge
         public void LoadNode(Vector2 _pos, LineData db, bool addtodata = false)
         {
             SubType subType = db.subType;
-            Type nodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
+            Type nodeType = Type.GetType($"OpenDialogue.Elements.DS{subType}");
             switch (db.NodeType)
             {
                 case NodeType.DialogueNode:
@@ -335,7 +335,7 @@ namespace OpenDialouge
         public void QuickLoad(Vector2 _pos, LineData db, bool addtodata = false)
         {
             SubType subType = db.subType;
-            Type nodeType = Type.GetType($"OpenDialouge.Elements.DS{subType}");
+            Type nodeType = Type.GetType($"OpenDialogue.Elements.DS{subType}");
 
             switch (subType)
             {
@@ -579,7 +579,7 @@ namespace OpenDialouge
                 Vector2 Cpos = new Vector2(100, 100) + node.data.pos;
                 LineData nd = node.data.Clone(data.id);
                 id.Add(nd.id);
-                nd.reMapConnections(Mapper);
+                nd.ReMapConnections(Mapper);
                 LoadNode(Cpos, nd, true);
                 data.id++;
             }

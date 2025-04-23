@@ -3,7 +3,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
     using System.Reflection;
     using utilities;
@@ -189,7 +189,7 @@ namespace OpenDialouge.Elements
             return output.FindIndex(x => x == text);
         }
 
-        private void KeyboardCombo(KeyDownEvent e)
+        private void KeyboardCombo(KeyUpEvent e)
         {
             if (e.altKey && e.keyCode == KeyCode.N)
             {

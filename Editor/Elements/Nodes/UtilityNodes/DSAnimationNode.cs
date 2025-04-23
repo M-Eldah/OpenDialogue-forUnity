@@ -3,9 +3,9 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Elements
+namespace OpenDialogue.Elements
 {
-    using OpenDialouge.utilities;
+    using OpenDialogue.utilities;
     using System;
 
     public class DSAnimationNode : UtilityNode

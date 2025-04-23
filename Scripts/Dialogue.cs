@@ -1,4 +1,4 @@
-﻿namespace OpenDialouge
+﻿namespace OpenDialogue
 {
     /// <summary>
     /// Custom class for encapsulation of DialogueLines

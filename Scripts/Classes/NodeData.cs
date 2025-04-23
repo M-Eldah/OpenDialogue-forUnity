@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace OpenDialouge
+namespace OpenDialogue
 {
     /*public interface INodeData
     {

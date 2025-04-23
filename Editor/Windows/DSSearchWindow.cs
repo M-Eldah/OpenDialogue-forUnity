@@ -3,7 +3,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OpenDialouge.Windows
+namespace OpenDialogue.Windows
 {
     public class DSSearchWindow : ScriptableObject, ISearchWindowProvider
     {
