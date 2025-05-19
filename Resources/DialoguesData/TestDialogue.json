@@ -1,6 +1,6 @@
 {
     "name": "TestDialogue",
-    "id": 3,
+    "id": 8,
     "startIndex": 0,
     "Lines": [
         {
@@ -66,29 +66,228 @@
             "Tag": ""
         },
         {
-            "name": "ChoiceUnlockNode-ID:2",
+            "name": "RandomNode-ID:2",
             "id": 2,
-            "dialogueText": [],
+            "dialogueText": [
+                "Radom1",
+                "Random2",
+                "Random3",
+                "Random4"
+            ],
             "extraValues": [
                 "0",
-                "1",
-                ""
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                "0"
             ],
             "choices": [
                 "Dialouge"
             ],
             "pos": {
-                "x": 974.0,
-                "y": 372.0
+                "x": 930.0,
+                "y": 301.0
             },
-            "subType": 5,
-            "NodeType": 1,
+            "subType": 4,
+            "NodeType": 0,
             "ConnectedNodes": [
+                3
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "MultiNode-ID:3",
+            "id": 3,
+            "dialogueText": [],
+            "extraValues": [
+                "False",
+                "False",
+                "False"
+            ],
+            "choices": [
+                "New Choice0",
+                "New Choice1",
+                "New Choice2"
+            ],
+            "pos": {
+                "x": 1177.0,
+                "y": 301.0
+            },
+            "subType": 1,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                4,
+                5,
+                6
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:4",
+            "id": 4,
+            "dialogueText": [
+                "Dialogue0"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1498.0,
+                "y": 137.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                7
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:5",
+            "id": 5,
+            "dialogueText": [
+                "Dialogue1"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1498.0,
+                "y": 393.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                7
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:6",
+            "id": 6,
+            "dialogueText": [
+                "Dialogue2"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1498.0,
+                "y": 653.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                7
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "ValueChoiceNode-ID:7",
+            "id": 7,
+            "dialogueText": [
+                "Choice1",
+                "Choice2",
+                "Choice3",
+                "Choice4"
+            ],
+            "extraValues": [
+                "intfieldEx",
+                "True",
+                "False",
+                "10",
+                "intfieldEx",
+                "True",
+                "True",
+                "5",
+                "intfieldEx",
+                "True",
+                "False",
+                "1",
+                "intfieldEx",
+                "True",
+                "False",
+                "15"
+            ],
+            "choices": [
+                "AlternativeText",
+                "AlternativeText 1",
+                "AlternativeText 2",
+                "AlternativeText"
+            ],
+            "pos": {
+                "x": 1770.0,
+                "y": 429.0
+            },
+            "subType": 8,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
                 -1
             ],
-            "q_string1": "TestDialogue.json",
-            "q_string2": "1",
-            "q_bool1": false,
+            "q_string1": "TestObject",
+            "q_string2": "",
+            "q_bool1": true,
             "q_bool2": false,
             "Tag": ""
         }

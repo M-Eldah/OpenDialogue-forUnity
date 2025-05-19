@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+using Object = System.Object;
 
 namespace OpenDialogue
 {
@@ -663,25 +666,15 @@ namespace OpenDialogue
             }
             else //if there is para
             {
-                GameObject gameObject2 = GameObject.Find(nodes[currentIndex].q_string1);
-                MethodInfo m = GetMethod(gameObject2, nodes[currentIndex].q_string2);
-                ParameterInfo[] ps = m.GetParameters();
+
+                GameObject gameObject = GameObject.Find(nodes[currentIndex].q_string1);
                 string[] inputs = nodes[currentIndex].extraValues[0].Split(",");
-                if (inputs.Length == 1)
-                {
-                    var paramter = Convert.ChangeType(nodes[currentIndex].extraValues[0], ps[0].ParameterType);
-                    m.Invoke(GetComponent(gameObject2, m), new object[] { paramter });
-                }
-                else
-                {
-                    object[] objects = new object[ps.Count()];
-                    inputs = nodes[currentIndex].extraValues[0].Split(",");
-                    for (int i = 0; i < inputs.Length; i++)
-                    {
-                        objects[i] = Convert.ChangeType(inputs[i], ps[i].ParameterType);
-                    }
-                    m.Invoke(GetComponent(gameObject2, m), objects);
-                }
+                Object[] parameters = ConvertToTypedArray(inputs.ToList());
+                string methodName = nodes[currentIndex].q_string2;
+
+                MethodInfo m = GetMethod(gameObject, methodName, parameters);
+                m.Invoke(GetComponent(gameObject, m), parameters);
+
             }
             pause = nodes[currentIndex].q_bool1;
         }
@@ -751,7 +744,32 @@ namespace OpenDialogue
                 return false;
             }
         }
+        static object[] ConvertToTypedArray(List<string> input)
+        {
+            var result = new List<object>();
+            foreach (var s in input)
+            {
+                result.Add(ConvertStringToBestType(s));
+            }
+            return result.ToArray();
+        }
 
+        static object ConvertStringToBestType(string s)
+        {
+            if (bool.TryParse(s, out bool boolVal))
+            {
+                return boolVal;
+            }
+            if (int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intVal))
+            {
+                return intVal;
+            }
+            if (float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out float floatVal))
+            {
+                return floatVal;
+            }
+            return s;
+        }
         private static MethodInfo GetMethod(GameObject gameObject, string method)
         {
             List<MethodInfo> methods = UtilityFunctions.GetMethods(gameObject);
@@ -765,7 +783,33 @@ namespace OpenDialogue
             }
             return m;
         }
+        private static MethodInfo GetMethod(GameObject gameObject, string methodName, Object[] parameters)
+        {
 
+            var methods = UtilityFunctions.GetMethods(gameObject).Where(m => m.Name == methodName);
+
+            foreach (MethodInfo method in methods)
+            {
+                ParameterInfo[] methodParams = method.GetParameters();
+                if (methodParams.Length != parameters.Length)
+                    continue;
+
+                bool match = true;
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    if (parameters[i] == null || !methodParams[i].ParameterType.IsAssignableFrom(parameters[i].GetType()))
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+
+                if (match)
+                    return method;
+            }
+
+            return null;
+        }
         private static MonoBehaviour GetComponent(GameObject obj, MethodInfo m)
         {
             var component = new object();
@@ -844,39 +888,28 @@ namespace OpenDialogue
                         // the value from the choice
                         var contest = Convert.ChangeType(Extra[eid + 3], typeof(float));
                         bool direction = bool.Parse(Extra[eid + 1]);
-                        if (contest.GetType() == typeof(bool))
+                        bool locked = bool.Parse(Extra[eid + 2]);
+                        if (locked)
                         {
-                            if ((float)condition == (float)contest)
-                            {
-                                Unlocks.Add(new(dialogue[i], bool.Parse(Extra[eid + 2])));
-                            }
-                            else
-                            {
-                                Unlocks.Add(new(choices[i], bool.Parse(Extra[eid + 2])));
-                            }
+                            Unlocks.Add(new(dialogue[i], true));
                         }
                         else
                         {
-                            if (direction)
+                            if (contest.GetType() == typeof(bool))
                             {
-                                if ((float)contest <= (float)condition)
-                                {
-                                    Unlocks.Add(new(dialogue[i], bool.Parse(Extra[eid + 2])));
-                                }
-                                else
-                                {
-                                    Unlocks.Add(new(choices[i], bool.Parse(Extra[eid + 2]), true));
-                                }
+                                Unlocks.Add(new(dialogue[i], locked, (float)condition == (float)contest, choices[i]));
                             }
                             else
                             {
-                                if ((float)contest > (float)condition)
+                                if (direction)
                                 {
-                                    Unlocks.Add(new(dialogue[i], bool.Parse(Extra[eid + 2])));
+                                    bool check = (float)contest >= (float)condition;
+                                    Unlocks.Add(new(dialogue[i], locked, check, choices[i]));
                                 }
                                 else
                                 {
-                                    Unlocks.Add(new(choices[i], bool.Parse(Extra[eid + 2])));
+                                    bool check = (float)contest < (float)condition;
+                                    Unlocks.Add(new(dialogue[i], locked, check, choices[i]));
                                 }
                             }
                         }
@@ -1001,7 +1034,6 @@ namespace OpenDialogue
         /// <returns></returns>
         public static DialogueData LoadDialogue(string name)
         {
-            
             var savefile = Resources.Load<TextAsset>($"DialoguesData/{name}");
             if (savefile != null)
             {
@@ -1013,10 +1045,14 @@ namespace OpenDialogue
                 return null;
             }
         }
+
         public static string savename;
-        public static string SaveName 
-        { get{
-                if(savename == ""||savename==null)
+
+        public static string SaveName
+        {
+            get
+            {
+                if (savename == "" || savename == null)
                 {
                     return System.DateTime.Now.ToString("ddMMMHH_mm_ss");
                 }
@@ -1024,7 +1060,7 @@ namespace OpenDialogue
                 {
                     return savename;
                 }
-            } 
+            }
             set
             {
                 savename = value;
@@ -1041,8 +1077,6 @@ namespace OpenDialogue
 #if UNITY_EDITOR
             savefile = $"Assets/OpenDialogue/DevSave/{SaveName}.json";
 #endif
-
-           
 
             // Convert the active dialogue save to JSON format
             string jsondata = JsonUtility.ToJson(ActiveDialougeSave);
@@ -1079,11 +1113,11 @@ namespace OpenDialogue
                 Vocab = new List<Keys>(ActiveDialougeSave.Dialogues.FirstOrDefault(i => i.title == DialougeName)?.Vocab.Select(v => new Keys(v.key, v.value)) ?? new List<Keys>()),
                 Keys = new List<Keys>(ActiveDialougeSave.Dialogues.FirstOrDefault(i => i.title == DialougeName)?.Keys.Select(k => new Keys(k.key, k.value)) ?? new List<Keys>())
             };
-            
+
             return record;
         }
 
-        public static void Load(string saveName="")
+        public static void Load(string saveName = "")
         {
             Debug.Log("I am Loading");
             SaveName = saveName;
@@ -1101,7 +1135,7 @@ namespace OpenDialogue
             }
             else
             {
-                Debug.LogError("No Save File Found at:" +saveLocation);
+                Debug.LogError("No Save File Found at:" + saveLocation);
             }
         }
 
@@ -1153,6 +1187,7 @@ namespace OpenDialogue
             }
             return DialogueList;
         }
+
         public static DialogueSave ActiveDialougeSave
         {
             get
@@ -1165,8 +1200,6 @@ namespace OpenDialogue
                 ActiveDialogueData d = Resources.Load("ActiveDialogueData") as ActiveDialogueData;
                 d.DialogueSave = value;
             }
-           
         }
     }
-
 }

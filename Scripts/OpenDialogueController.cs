@@ -61,23 +61,17 @@ public class OpenDialogueController : MonoBehaviour
 
     private delegate void ChoiceDelegate(int num);
 
-    private ChoiceDelegate choiceDelegate;
-
     private bool multinode;
 
     public Actor[] actors;
 
     public bool ActorFromHandeler;
+
     private void Awake()
     {
         single.SetActive(false);
         multi.SetActive(false);
         instance = this;
-    }
-
-    private void Start()
-    {
-        choiceDelegate = SetPlayerChoice;
     }
 
     private void OnEnable()
@@ -128,9 +122,11 @@ public class OpenDialogueController : MonoBehaviour
             UpdatedialogueUi(Node);
         }
     }
+
     public bool Inputmode
     {
-        get{
+        get
+        {
             if (field == null)
             {
                 return false;
@@ -140,8 +136,8 @@ public class OpenDialogueController : MonoBehaviour
                 return field.gameObject.activeInHierarchy;
             }
         }
-
     }
+
     public void StartDialogue(DialogueValues dialogue)
     {
         NodeData Node = DialogueSystem.DStart(dialogue, dialogue.startIndex);
@@ -217,13 +213,50 @@ public class OpenDialogueController : MonoBehaviour
                     }
                     GameObject Button = Instantiate(buttonPrefab, choiceHolder.transform);
                     choices.Add(Button);
-                    Button.GetComponent<Button>().onClick.AddListener(delegate () { choiceDelegate(i); });
-                   /* if (Choices[i].Text[0] == '*' && Choices[i].Text[1] == '*')
+
+                    int choiceIndex = i; // Create a local copy of i
+
+                    Button.GetComponent<Button>().onClick.AddListener(delegate () { SetPlayerChoice(choiceIndex); });
+
+                    /* if (Choices[i].Text[0] == '*' && Choices[i].Text[1] == '*')
                     {
                         Button.GetComponent<Button>().interactable = false;
                         Choices[i].Text = Choices[i].Text.Remove(0, 2);
-                    }*/
+                    } */
+
                     Button.GetComponentInChildren<TextMeshProUGUI>().text = Node.Choices[i].Text;
+                }
+                //if you don't wait for end of frame the button is pressed fully and actually activated i don't know why
+                StartCoroutine(Selectbutton(choices[0].GetComponent<Button>()));
+                break;
+
+            case TextType.MultiAltNode:
+                multinode = true;
+                multi.SetActive(true);
+                choiceHolder.GetComponent<RectTransform>().sizeDelta =
+                new Vector2(0, Node.Choices.Count * 40 + (Node.Choices.Count - 1) * 10);
+                List<Dialogue> Choices1 = Node.Dialogue<List<Dialogue>>();
+                for (int i = 0; i < Choices1.Count; i++)
+                {
+                    if (Choices1[i].locked)
+                    {
+                        continue;
+                    }
+                    GameObject Button = Instantiate(buttonPrefab, choiceHolder.transform);
+                    choices.Add(Button);
+
+                    int choiceIndex = i; // Create a local copy of i
+
+                    Button.GetComponent<Button>().onClick.AddListener(delegate () { SetPlayerChoice(choiceIndex); });
+
+                    /* if (Choices[i].Text[0] == '*' && Choices[i].Text[1] == '*')
+                    {
+                        Button.GetComponent<Button>().interactable = false;
+                        Choices[i].Text = Choices[i].Text.Remove(0, 2);
+                    } */
+                    Button.GetComponentInChildren<TextMeshProUGUI>().text = Node.Choices[i].check == true ?
+                        Button.GetComponentInChildren<TextMeshProUGUI>().text = Node.Choices[i].Text :
+                        Button.GetComponentInChildren<TextMeshProUGUI>().text = Node.Choices[i].altText;
                 }
                 //if you don't wait for end of frame the button is pressed fully and actually activated i don't know why
                 StartCoroutine(Selectbutton(choices[0].GetComponent<Button>()));
@@ -247,8 +280,6 @@ public class OpenDialogueController : MonoBehaviour
 
                 field.transform.parent.gameObject.SetActive(true);
                 break;
-
-
         }
     }
 
@@ -289,7 +320,7 @@ public class OpenDialogueController : MonoBehaviour
 
     public void EnterValue()
     {
-      bool success=DialogueSystem.InputValue(field.text);
+        bool success = DialogueSystem.InputValue(field.text);
         if (success)
         {
             field.transform.parent.gameObject.SetActive(false);
@@ -300,7 +331,6 @@ public class OpenDialogueController : MonoBehaviour
             Debug.LogError("WrongInput");
         }
     }
-
 
     private IEnumerator Selectbutton(Button b)
     {

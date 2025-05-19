@@ -77,7 +77,7 @@ namespace OpenDialogue
         {
             Tag = tag;
             Choices = dialogue;
-            type = subType == SubType.MultiNode ? TextType.MultiNode : TextType.MultiNode;
+            type = subType == SubType.MultiNode ? TextType.MultiNode : TextType.MultiAltNode;
         }
 
         public NodeData(Dialogue dialogue, List<Dialogue> choices, CharacterId character, bool pause, TextType type, string tag, AudioClip clip)
@@ -90,19 +90,19 @@ namespace OpenDialogue
             Tag = tag;
             this.clip = clip;
         }
-        public dynamic Dialogue<T>()
+        public T Dialogue<T>() where T : class
         {
             if (typeof(T) == typeof(Dialogue))
             {
-                return dialogue;
+                return dialogue as T;
             }
             else if (typeof(T) == typeof(List<Dialogue>))
             {
-                return Choices;
+                return Choices as T;
             }
             else
             {
-                return false;
+                return null;
             }
         }
     }

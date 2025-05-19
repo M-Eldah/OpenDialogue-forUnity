@@ -20,7 +20,7 @@ namespace OpenDialogue.Elements
             prop= new List<DropdownField>();
             valueName = new List<string>();
             base.Initialize(Pos, graph);
-            data.NodeType = NodeType.UtilityNode;
+            data.NodeType = NodeType.DialogueNode;
             data.subType = SubType.ValueChoiceNode;
             AddToClassList("MultiNode");
         }

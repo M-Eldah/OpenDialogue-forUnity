@@ -226,6 +226,14 @@ namespace OpenDialogue
                     DialogueNode node = (DialogueNode)Activator.CreateInstance(nodeType);
                     node.title = $"{subType}-ID:{data.id}";
                     node.data.name = node.title;
+                    if (Nodes.ContainsKey(data.id))
+                    {
+                        data.id = 0;
+                        while(Nodes.ContainsKey(data.id))
+                        {
+                            data.id++;
+                        }
+                    }
                     node.data.id = data.id;
                     data.id++;
                     node.Initialize(pos, this);

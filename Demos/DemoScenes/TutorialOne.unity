@@ -1950,6 +1950,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1878072047}
   m_CullTransparentMesh: 1
+--- !u!1 &1959555691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1959555692}
+  - component: {fileID: 1959555693}
+  m_Layer: 0
+  m_Name: TestObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1959555692
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959555691}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 546.00476, y: 302.39035, z: -0.112660214}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1959555693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959555691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4577dc8d23de8746b1c6b740135794f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textMeshPro: {fileID: 0}
+  boolfieldEx: 0
+  intfieldEx: 10
+  intfieldEx2: 5
+  intfieldEx3: 1
+  sname: Dag
 --- !u!1 &1460870702769034669
 GameObject:
   m_ObjectHideFlags: 0
@@ -3008,130 +3058,10 @@ MonoBehaviour:
   DialogueName: TestDialogue
   index: 1
   data:
-    Name: TestDialogue
+    Name: 
     startIndex: 0
-    nodes:
-    - name: SingleNode-ID:0
-      id: 0
-      dialogueText:
-      - Dialogue1
-      extraValues:
-      - 0
-      - 0
-      - False
-      choices:
-      - Dialouge
-      pos: {x: 338, y: 301}
-      subType: 0
-      NodeType: 0
-      ConnectedNodes: 01000000
-      q_string1: 
-      q_string2: 
-      q_bool1: 0
-      q_bool2: 0
-      Tag: 
-    - name: SingleNode-ID:1
-      id: 1
-      dialogueText:
-      - Dialogue2
-      - Dialogue3
-      extraValues:
-      - 0
-      - 0
-      - True
-      - 0
-      - 0
-      - False
-      choices:
-      - Dialouge
-      pos: {x: 719, y: 301}
-      subType: 0
-      NodeType: 0
-      ConnectedNodes: 02000000
-      q_string1: 
-      q_string2: 
-      q_bool1: 0
-      q_bool2: 0
-      Tag: 
-    - name: ChoiceUnlockNode-ID:2
-      id: 2
-      dialogueText: []
-      extraValues:
-      - 0
-      - 1
-      - 
-      choices:
-      - Dialouge
-      pos: {x: 974, y: 372}
-      subType: 5
-      NodeType: 1
-      ConnectedNodes: ffffffff
-      q_string1: TestDialogue.json
-      q_string2: 1
-      q_bool1: 0
-      q_bool2: 0
-      Tag: 
-  nodes:
-  - name: SingleNode-ID:0
-    id: 0
-    dialogueText:
-    - Dialogue1
-    extraValues:
-    - 0
-    - 0
-    - False
-    choices:
-    - Dialouge
-    pos: {x: 338, y: 301}
-    subType: 0
-    NodeType: 0
-    ConnectedNodes: 01000000
-    q_string1: 
-    q_string2: 
-    q_bool1: 0
-    q_bool2: 0
-    Tag: 
-  - name: SingleNode-ID:1
-    id: 1
-    dialogueText:
-    - Dialogue2
-    - Dialogue3
-    extraValues:
-    - 0
-    - 0
-    - True
-    - 0
-    - 0
-    - False
-    choices:
-    - Dialouge
-    pos: {x: 719, y: 301}
-    subType: 0
-    NodeType: 0
-    ConnectedNodes: 02000000
-    q_string1: 
-    q_string2: 
-    q_bool1: 0
-    q_bool2: 0
-    Tag: 
-  - name: ChoiceUnlockNode-ID:2
-    id: 2
-    dialogueText: []
-    extraValues:
-    - 0
-    - 1
-    - 
-    choices:
-    - Dialouge
-    pos: {x: 974, y: 372}
-    subType: 5
-    NodeType: 1
-    ConnectedNodes: ffffffff
-    q_string1: TestDialogue.json
-    q_string2: 1
-    q_bool1: 0
-    q_bool2: 0
-    Tag: 
+    nodes: []
+  nodes: []
 --- !u!222 &6058866132887428702
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3148,3 +3078,4 @@ SceneRoots:
   - {fileID: 1103597083}
   - {fileID: 1771890057}
   - {fileID: 203520825}
+  - {fileID: 1959555692}
