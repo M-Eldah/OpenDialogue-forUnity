@@ -783,7 +783,7 @@ namespace OpenDialogue
             }
             return m;
         }
-        private static MethodInfo GetMethod(GameObject gameObject, string methodName, Object[] parameters)
+        private static MethodInfo GetMethod(GameObject gameObject, string methodName,Object[] parameters)
         {
 
             var methods = UtilityFunctions.GetMethods(gameObject).Where(m => m.Name == methodName);

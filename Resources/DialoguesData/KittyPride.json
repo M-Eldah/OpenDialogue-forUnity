@@ -1,0 +1,231 @@
+{
+    "name": "KittyPride",
+    "id": 8,
+    "startIndex": 0,
+    "Lines": [
+        {
+            "name": "SingleNode-ID:0",
+            "id": 0,
+            "dialogueText": [
+                "You ever notice how the Danger Room always malfunctions right when you’re about to beat your high score? I swear, it’s like it knows. I was this close to nailing that perfect run... and then—boom—Sentinels everywhere. Typical."
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 408.0,
+                "y": 360.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                1
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:1",
+            "id": 1,
+            "dialogueText": [
+                "Anyway, enough about my near-death workout. What about you? If you had the whole day off—no villains, no training, no world-ending chaos—how’d you spend it?"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 759.0,
+                "y": 360.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                2
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "MultiNode-ID:2",
+            "id": 2,
+            "dialogueText": [],
+            "extraValues": [
+                "False",
+                "False",
+                "False"
+            ],
+            "choices": [
+                "I’d spend it hanging out with friends. Just good vibes, pizza, and maybe a movie marathon.",
+                "Honestly? I’d probably just sleep. Nothing fancy, just... rest.",
+                "Probably hit the gym. Cardio, weights, maybe sparring—just go hard all day."
+            ],
+            "pos": {
+                "x": 1084.0,
+                "y": 360.0
+            },
+            "subType": 1,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                3,
+                4,
+                5
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:3",
+            "id": 3,
+            "dialogueText": [
+                "Aww, that sounds awesome. Honestly, I’d be down for that right now. You bring the pizza, I’ll bring the sarcastic commentary. Fair warning, though—I will judge your movie picks."
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1522.0,
+                "y": 145.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                6
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:4",
+            "id": 4,
+            "dialogueText": [
+                "Totally fair. Some days just call for crashing under a mountain of blankets and pretending the world doesn’t exist. Been there. No shame"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1522.0,
+                "y": 442.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                7
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:5",
+            "id": 5,
+            "dialogueText": [
+                "...Ugh, why are you like this? A full day off and you choose voluntary suffering? I swear, you and Logan would make great gym buddies—both allergic to relaxing. You know rest is a thing, right?"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 1522.0,
+                "y": 728.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
+        },
+        {
+            "name": "ActionNode-ID:6",
+            "id": 6,
+            "dialogueText": [],
+            "extraValues": [
+                "10,0,10,10,0"
+            ],
+            "choices": [],
+            "pos": {
+                "x": 1874.0,
+                "y": 145.0
+            },
+            "subType": 2,
+            "NodeType": 1,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "Dialogue",
+            "q_string2": "generalUpdate",
+            "q_bool1": false,
+            "q_bool2": true,
+            "Tag": ""
+        },
+        {
+            "name": "ActionNode-ID:7",
+            "id": 7,
+            "dialogueText": [],
+            "extraValues": [
+                "10,0"
+            ],
+            "choices": [],
+            "pos": {
+                "x": 1874.0,
+                "y": 452.0
+            },
+            "subType": 2,
+            "NodeType": 1,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "Dialogue",
+            "q_string2": "ValueUpdate",
+            "q_bool1": false,
+            "q_bool2": true,
+            "Tag": ""
+        }
+    ],
+    "Group": [],
+    "groudid": 0
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using OpenDialogue;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
@@ -11,6 +12,7 @@ using UnityEngine.UI;
 ///
 public class OpenDialogueController : MonoBehaviour
 {
+    Settings settings;
     [SerializeField]
     public static OpenDialogueController instance;
 
@@ -19,9 +21,6 @@ public class OpenDialogueController : MonoBehaviour
 
     //the main text we use to diaplay text
     public TextMeshProUGUI dialogueText;
-
-    //The Textmesh Component used for the name
-    public TextMeshProUGUI characterName;
 
     //A list of Button we use to contain Choices, here I use a prefab to allow for an unlimited number of choices, but
     //if you will only have a set amount of choices you don't need i
@@ -67,11 +66,16 @@ public class OpenDialogueController : MonoBehaviour
 
     public bool ActorFromHandeler;
 
+    private Touchscreen touchscreen;
+
+    private GameObject pUi;
     private void Awake()
     {
         single.SetActive(false);
         multi.SetActive(false);
+        touchscreen = Touchscreen.current;
         instance = this;
+        settings = Resources.Load<Settings>("Settings");
     }
 
     private void OnEnable()
@@ -92,13 +96,27 @@ public class OpenDialogueController : MonoBehaviour
     {
         //DialogueSystem.Save("Dialogue");
         //Ending the dialogue
+        if (pUi != null)
+        {
+            pUi.SetActive(true);
+        }
         single.SetActive(false);
         multi.SetActive(false);
+        CameraControl.Setlocked(this.gameObject.name,false);
     }
+    public void Update()
+    {
+        if (DialogueSystem.inDialogue&& touchscreen.press.wasPressedThisFrame)
+        {
+            Debug.Log("Pressed");
+            ContinueDialogue();
+        }
 
+
+    }
     public void ContinueDialogue()
     {
-        if (DialogueSystem.inDialogue && !multinode)
+        if (!multinode)
         {
             //check if the text is animating if we are skip the animation and load it completely
             if (!animatingText)
@@ -114,9 +132,45 @@ public class OpenDialogueController : MonoBehaviour
         }
     }
 
-    public void StartDialogue()
+    public void StartDialogue(GameObject g=null)
     {
+        pUi = g;
+        Application.targetFrameRate = 60;
+        CameraControl.Setlocked(this.gameObject.name, true);
         NodeData Node = DialogueSystem.DStart(DialogueHandeler.DialogueData, DialogueHandeler.ORSNode);
+        if (Node != null)
+        {
+            UpdatedialogueUi(Node);
+        }
+    }
+    
+    public void StartDialogue(string dialogueName, GameObject g = null)
+    {
+        pUi = g;
+        animateText = settings.AnimatedText;
+        NodeData Node = DialogueSystem.DStart(dialogueName);
+        if (Node != null)
+        {
+            UpdatedialogueUi(Node);
+        }
+    }
+    public void StartDialogue(DialogueValues dialogue, GameObject g = null)
+    {
+        pUi = g;
+        Application.targetFrameRate = 60;
+        animateText = settings.AnimatedText;
+        NodeData Node = DialogueSystem.DStart(dialogue, dialogue.startIndex);
+        if (Node != null)
+        {
+            UpdatedialogueUi(Node);
+        }
+    }
+    public void StartDialogue(DialogueValues dialogue, int startIndex = 0, GameObject g = null)
+    {
+        pUi = g;
+        Application.targetFrameRate = 60;
+        CameraControl.Setlocked(this.gameObject.name, true);
+        NodeData Node = DialogueSystem.DStart(dialogue, startIndex);
         if (Node != null)
         {
             UpdatedialogueUi(Node);
@@ -138,23 +192,7 @@ public class OpenDialogueController : MonoBehaviour
         }
     }
 
-    public void StartDialogue(DialogueValues dialogue)
-    {
-        NodeData Node = DialogueSystem.DStart(dialogue, dialogue.startIndex);
-        if (Node != null)
-        {
-            UpdatedialogueUi(Node);
-        }
-    }
-
-    public void StartDialogue(string dialogueName)
-    {
-        NodeData Node = DialogueSystem.DStart(dialogueName);
-        if (Node != null)
-        {
-            UpdatedialogueUi(Node);
-        }
-    }
+    
 
     public void UpdatedialogueUi(NodeData Node)
     {
@@ -186,7 +224,7 @@ public class OpenDialogueController : MonoBehaviour
                             image.gameObject.SetActive(false);
                         }
                     }
-                    characterName.text = actors[Node.character.id].name;
+                    //characterName.text = actors[Node.character.id].name;
                     if (animateText)
                     {
                         dText = dialogue.Text;
@@ -203,7 +241,7 @@ public class OpenDialogueController : MonoBehaviour
                 multinode = true;
                 multi.SetActive(true);
                 choiceHolder.GetComponent<RectTransform>().sizeDelta =
-                new Vector2(0, Node.Choices.Count * 40 + (Node.Choices.Count - 1) * 10);
+                new Vector2(0, Node.Choices.Count * 420 + (Node.Choices.Count - 1) * 50 + 80);
                 List<Dialogue> Choices = Node.Dialogue<List<Dialogue>>();
                 for (int i = 0; i < Choices.Count; i++)
                 {
@@ -342,10 +380,17 @@ public class OpenDialogueController : MonoBehaviour
     {
         dialogueText.text = text;
         dialogueText.maxVisibleCharacters = 0;
-        while (dialogueText.maxVisibleCharacters < text.Length)
+
+        float speed = settings.TextSpeed; // Prevent zero or negative speed
+                                                            // Calculate how many fixed updates to wait per character
+
+
+        
+        for (int charIndex = 0;charIndex<dialogueText.text.Length; charIndex++)
         {
-            yield return new WaitForSecondsRealtime(0.025f);
-            dialogueText.maxVisibleCharacters++;
+
+            yield return new WaitForFixedUpdate();
+            dialogueText.maxVisibleCharacters = charIndex;
         }
         animatingText = false;
     }
