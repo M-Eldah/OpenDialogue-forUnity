@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using OpenDialogue;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 public class DemoScript : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-  
+
     }
 
     // Update is called once per frame
@@ -16,14 +14,14 @@ public class DemoScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if(!DialogueSystem.inDialogue)
+            if (!DialogueSystem.inDialogue)
             {
-                OpenDialogueController.instance.StartDialogue();
+                OpenDialogueController.instance.StartDialogueWithGroupName("Test2");
             }
             else
             {
-                if(!OpenDialogueController.instance.Inputmode)
-                OpenDialogueController.instance.ContinueDialogue();
+                if (!OpenDialogueController.instance.Inputmode)
+                    OpenDialogueController.instance.ContinueDialogue();
             }
 
         }

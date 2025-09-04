@@ -45,9 +45,115 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Dialogue:
-    name: 
-    id: 0
+    name: GroupTestGraph
+    id: 5
     startIndex: 0
-    Lines: []
-    Group: []
+    Lines:
+    - name: SingleNode-ID:0
+      groupID: 
+      id: 0
+      dialogueText:
+      - Dialogue0
+      extraValues:
+      - 0
+      - 0
+      - False
+      choices:
+      - Dialouge
+      pos: {x: 134, y: -24}
+      subType: 0
+      NodeType: 0
+      ConnectedNodes: ffffffff
+      q_string1: 
+      q_string2: 
+      q_bool1: 0
+      q_bool2: 0
+      Tag: 
+    - name: SingleNode-ID:1
+      groupID: 
+      id: 1
+      dialogueText:
+      - Test1
+      extraValues:
+      - 0
+      - 0
+      - False
+      choices:
+      - Dialouge
+      pos: {x: -58, y: -24}
+      subType: 0
+      NodeType: 0
+      ConnectedNodes: 00000000
+      q_string1: 
+      q_string2: 
+      q_bool1: 0
+      q_bool2: 0
+      Tag: 
+    - name: SingleNode-ID:2
+      groupID: 
+      id: 2
+      dialogueText:
+      - Dialogue0
+      extraValues:
+      - 0
+      - 0
+      - False
+      choices:
+      - Dialouge
+      pos: {x: 134, y: 303}
+      subType: 0
+      NodeType: 0
+      ConnectedNodes: ffffffff
+      q_string1: 
+      q_string2: 
+      q_bool1: 0
+      q_bool2: 0
+      Tag: 
+    - name: SingleNode-ID:3
+      groupID: 
+      id: 3
+      dialogueText:
+      - Dialogue0
+      extraValues:
+      - 0
+      - 0
+      - False
+      choices:
+      - Dialouge
+      pos: {x: -58, y: 303}
+      subType: 0
+      NodeType: 0
+      ConnectedNodes: 02000000
+      q_string1: 
+      q_string2: 
+      q_bool1: 0
+      q_bool2: 0
+      Tag: 
+    - name: SingleNode-ID:3
+      groupID: 
+      id: 4
+      dialogueText:
+      - Dialogue0
+      extraValues:
+      - 0
+      - 0
+      - False
+      choices:
+      - Dialouge
+      pos: {x: 311, y: 324}
+      subType: 0
+      NodeType: 0
+      ConnectedNodes: ffffffff
+      q_string1: 
+      q_string2: 
+      q_bool1: 0
+      q_bool2: 0
+      Tag: 
+    Group:
+    - groupName: Test1,1
+      ContainedNodes: 0000000001000000
+      Position: {x: 0, y: 0}
+    - groupName: Test2,3
+      ContainedNodes: 0300000002000000
+      Position: {x: 0, y: 0}
     groudid: 0

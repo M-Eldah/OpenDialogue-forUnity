@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-public class DialogueContainer:MonoBehaviour
+public class DialogueContainer : MonoBehaviour
 {
     public DialogueData Dialogue;
 }
@@ -11,18 +11,21 @@ public struct DialogueValues
     public string Name;
     public int startIndex;
     public LineData[] nodes;
-    public DialogueValues(int leaveEmpty=-1)
+    public GroupData[] groups;
+    public DialogueValues(int leaveEmpty = -1)
     {
-        Name= string.Empty;
+        Name = string.Empty;
         startIndex = -1;
         nodes = new LineData[0];
+        groups = new GroupData[0];
     }
     public DialogueValues(DialogueData data)
     {
         Name = data.name;
-        startIndex=data.startIndex;
-        
-        nodes=data.Lines.ToArray();
+        startIndex = data.startIndex;
+
+        nodes = data.Lines.ToArray();
+        groups = data.Group.ConvertAll(x => new GroupData(x.GroupName, x.ContainedNodes)).ToArray();
     }
 }
 //The class used to save the Dialogue
@@ -44,6 +47,7 @@ public class LineData
 {
     public string name;
 
+    public string groupID = "";
     public int id;
 
     public List<string> dialogueText;
@@ -62,7 +66,7 @@ public class LineData
     public string q_string1;
 
     public string q_string2;
- 
+
     public bool q_bool1;
 
     public bool q_bool2;
@@ -97,26 +101,26 @@ public class LineData
 
     public LineData Clone(int id)
     {
-        LineData node = new LineData();
+        LineData node = new();
         node.id = id;
-        node.name= $"{subType}-ID:{id}";
+        node.name = $"{subType}-ID:{id}";
         node.dialogueText.AddRange(dialogueText);
         node.extraValues.AddRange(extraValues);
         node.choices.AddRange(choices);
         node.ConnectedNodes.AddRange(ConnectedNodes);
-        node.pos = pos+new Vector2(100,100);
-        node.NodeType= NodeType;
-        node.subType= subType;
+        node.pos = pos + new Vector2(100, 100);
+        node.NodeType = NodeType;
+        node.subType = subType;
         node.q_string1 = q_string1;
         node.q_string2 = q_string2;
-        node.q_bool1= q_bool1;
-        node.q_bool2= q_bool2;
+        node.q_bool1 = q_bool1;
+        node.q_bool2 = q_bool2;
         node.Tag = Tag;
 
         return node;
     }
 
-    public void ReMapConnections(Dictionary<int,int> mapper)
+    public void ReMapConnections(Dictionary<int, int> mapper)
     {
         for (int i = 0; i < ConnectedNodes.Count; i++)
         {
@@ -132,14 +136,14 @@ public class LineData
 public class GroupsDB
 {
 
-    private string groupName;
+    public string groupName;
 
     public string GroupName
     {
         get { return groupName; }
-        set { groupName= value; }
+        set { groupName = value; }
     }
-                                         
+
     public List<int> ContainedNodes;
 
     public Vector2 Position;
@@ -152,5 +156,22 @@ public class GroupsDB
         groupName = name;
         ContainedNodes = _Cnodes;
         Position = pos;
+    }
+}
+public class GroupData
+{
+    public string groupName;
+    public List<int> containedNdoes;
+    public int startNode;
+    public GroupData()
+    {
+        containedNdoes = new List<int>();
+    }
+    public GroupData(string name, List<int> _Cnodes)
+    {
+        groupName = name.Split(",")[0];
+        startNode = int.Parse(name.Split(",")[1]);
+        containedNdoes = _Cnodes;
+
     }
 }

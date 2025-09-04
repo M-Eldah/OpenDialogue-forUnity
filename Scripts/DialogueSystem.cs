@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
@@ -61,7 +60,7 @@ namespace OpenDialogue
             data = _data;
             lineIndex = 0;
             //turn Node list to dictionary
-            nodes = NodeDictionary(data.nodes);
+            nodes = NodeDictionary(data.nodes, data.groups);
             //Indicates That we are in Dialogue
             inDialogue = true;
             //Load save data ??
@@ -79,7 +78,36 @@ namespace OpenDialogue
             //return the new node data
             return NodeDataReturn();
         }
-
+        /// <summary>
+        /// Load the DialogueData, detecting the starting node using Group name
+        /// </summary>
+        /// <param name="_data">The Dialogue Data</param>
+        /// <param name="startnode">The starting Node Id</param>
+        /// <returns></returns>
+        public static NodeData DStart(DialogueValues _data, string groupName)
+        {
+            data = _data;
+            lineIndex = 0;
+            //turn Node list to dictionary
+            nodes = NodeDictionary(data.nodes, data.groups);
+            //Indicates That we are in Dialogue
+            inDialogue = true;
+            //Load save data ??
+            dRecord = LoadRecord(data.Name);
+            //check the starting index
+            int startingindex = data.groups.ToList().Find(x => x.groupName == groupName) != null ? data.groups.ToList().Find(x => x.groupName == groupName).startNode : -1;
+            if (startingindex == -1)
+            {
+                //Check if the Dia
+                currentIndex = dRecord.startModified ? dRecord.startindex : data.startIndex;
+            }
+            else
+            {
+                currentIndex = startingindex;
+            }
+            //return the new node data
+            return NodeDataReturn();
+        }
         /// <summary>
         /// Load the DialogueData
         /// </summary>
@@ -91,7 +119,7 @@ namespace OpenDialogue
             data = new DialogueValues(LoadDialogue(dialogueName));
             lineIndex = 0;
             //turn Node list to dictionary
-            nodes = NodeDictionary(data.nodes);
+            nodes = NodeDictionary(data.nodes, data.groups);
             //change teh static bool to indicate we are in Dialogue
             inDialogue = true;
             // ?? Load save data
@@ -109,7 +137,35 @@ namespace OpenDialogue
             //return the new node data
             return NodeDataReturn();
         }
-
+        /// <summary>
+        /// Load the DialogueData
+        /// </summary>
+        /// <param name="dialogueName">The Dialogue name</param>
+        /// <param name="startnode">The starting Node Id</param>
+        /// <returns></returns>
+        public static NodeData DStart(string dialogueName, string groupName)
+        {
+            data = new DialogueValues(LoadDialogue(dialogueName));
+            lineIndex = 0;
+            //turn Node list to dictionary
+            nodes = NodeDictionary(data.nodes, data.groups);
+            //change teh static bool to indicate we are in Dialogue
+            inDialogue = true;
+            // ?? Load save data
+            dRecord = LoadRecord(data.Name);
+            //check the starting index
+            int startingindex = data.groups.ToList().Find(x => x.groupName == groupName) != null ? data.groups.ToList().Find(x => x.groupName == groupName).startNode : -1;
+            if (startingindex == -1)
+            {
+                currentIndex = dRecord.startModified ? dRecord.startindex : data.startIndex;
+            }
+            else
+            {
+                currentIndex = startingindex;
+            }
+            //return the new node data
+            return NodeDataReturn();
+        }
         /// <summary>
         /// A Method which returns node data
         ///
@@ -1144,11 +1200,12 @@ namespace OpenDialogue
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public static Dictionary<int, LineData> NodeDictionary(LineData[] nodes)
+        public static Dictionary<int, LineData> NodeDictionary(LineData[] nodes, GroupData[] groups)
         {
             Dictionary<int, LineData> nodeD = new Dictionary<int, LineData>();
             foreach (LineData n in nodes)
             {
+                n.groupID = groups.FirstOrDefault(i => i.containedNdoes.Contains(n.id))?.groupName ?? "";
                 nodeD.Add(n.id, n);
             }
             return nodeD;

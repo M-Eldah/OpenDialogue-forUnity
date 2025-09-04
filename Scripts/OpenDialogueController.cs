@@ -1,6 +1,6 @@
+using OpenDialogue;
 using System.Collections;
 using System.Collections.Generic;
-using OpenDialogue;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -122,7 +122,14 @@ public class OpenDialogueController : MonoBehaviour
             UpdatedialogueUi(Node);
         }
     }
-
+    public void StartDialogueWithGroupName(string groupName)
+    {
+        NodeData Node = DialogueSystem.DStart(DialogueHandeler.DialogueData, groupName);
+        if (Node != null)
+        {
+            UpdatedialogueUi(Node);
+        }
+    }
     public bool Inputmode
     {
         get

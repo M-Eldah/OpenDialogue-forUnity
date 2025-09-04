@@ -6,7 +6,7 @@ public class DialogueHandeler : MonoBehaviour
     [SerializeField]
     private int OverRideStartNode = -1;
     [SerializeField]
-    public int ORSNode { get { return OverRideStartNode; } set { OverRideStartNode = value; }}
+    public int ORSNode { get { return OverRideStartNode; } set { OverRideStartNode = value; } }
     [SerializeField]
     private string DialogueName;
     [SerializeField]
@@ -19,47 +19,52 @@ public class DialogueHandeler : MonoBehaviour
     public DialogueValues data;
     [SerializeField]
     private LineData[] nodes;
-    public DialogueValues DialogueData 
-    { 
-        get {
+    [SerializeField]
+    private GroupData[] groups;
+    public DialogueValues DialogueData
+    {
+        get
+        {
             data.nodes = nodes;
-            return data; 
-        } 
-        set {
-            data = value; 
-        } 
+            return data;
+        }
+        set
+        {
+            data = value;
+        }
     }
 
     private void Awake()
     {
-        if(data.Name=="")
+        if (data.Name == "")
         {
             LoadData(Dname);
         }
     }
     public void LoadData(string dialogueName)
     {
-            if (dialogueName == data.Name)
+        if (dialogueName == data.Name)
+        {
+            Debug.Log("Data already loaded");
+        }
+        else
+        {
+            var savefile = Resources.Load<TextAsset>($"DialoguesData/{dialogueName}");
+            if (savefile != null)
             {
-                Debug.Log("Data already loaded");
-            }
-            else
-            {
-                var savefile = Resources.Load<TextAsset>($"DialoguesData/{dialogueName}");
-                if (savefile != null)
-                {
-                    data=new DialogueValues(JsonUtility.FromJson<DialogueData>(savefile.text));
-                    nodes = data.nodes;
-                }
-
+                data = new DialogueValues(JsonUtility.FromJson<DialogueData>(savefile.text));
+                nodes = data.nodes;
+                groups = data.groups;
             }
 
-      
+        }
+
+
     }
 
     public void Cleardata()
     {
-        data =new DialogueValues();
-        nodes= new LineData[0];
+        data = new DialogueValues();
+        nodes = new LineData[0];
     }
 }
