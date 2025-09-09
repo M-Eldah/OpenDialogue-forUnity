@@ -1,6 +1,6 @@
 {
     "name": "GroupTestGraph",
-    "id": 3,
+    "id": 5,
     "startIndex": 0,
     "Lines": [
         {
@@ -85,7 +85,7 @@
             "subType": 0,
             "NodeType": 0,
             "ConnectedNodes": [
-                -1
+                4
             ],
             "q_string1": "",
             "q_string2": "",
@@ -122,6 +122,36 @@
             "q_bool1": false,
             "q_bool2": false,
             "Tag": ""
+        },
+        {
+            "name": "SingleNode-ID:3",
+            "groupID": "",
+            "id": 4,
+            "dialogueText": [
+                "Dialogue0"
+            ],
+            "extraValues": [
+                "0",
+                "0",
+                "False"
+            ],
+            "choices": [
+                "Dialouge"
+            ],
+            "pos": {
+                "x": 314.0,
+                "y": 303.0
+            },
+            "subType": 0,
+            "NodeType": 0,
+            "ConnectedNodes": [
+                -1
+            ],
+            "q_string1": "",
+            "q_string2": "",
+            "q_bool1": false,
+            "q_bool2": false,
+            "Tag": ""
         }
     ],
     "Group": [
@@ -140,7 +170,8 @@
             "groupName": "Test2,3",
             "ContainedNodes": [
                 3,
-                2
+                2,
+                4
             ],
             "Position": {
                 "x": 0.0,

@@ -8,8 +8,8 @@ using UnityEngine.UIElements;
 
 namespace OpenDialogue
 {
-    using OpenDialogue.Windows;
     using Elements;
+    using OpenDialogue.Windows;
     using UnityEngine.Events;
 
     [System.Serializable]
@@ -56,6 +56,7 @@ namespace OpenDialogue
         private void ReloadGraph()
         {
             ClearGraph(false);
+            Debug.Log(data.Group.Count);
             DrawGraph(data, true);
         }
 
@@ -122,7 +123,7 @@ namespace OpenDialogue
             );
             return Combatiableport;
         }
- 
+
         #endregion OverRide Methods
 
         #region Elements,Manipulators and Keyboard callbacks
@@ -182,7 +183,7 @@ namespace OpenDialogue
             DSGroup group = new DSGroup()
             {
                 title = Title
-                
+
             };
             group.data.GroupName = Title;
             group.SetPosition(new Rect(vector2, Vector2.zero));
@@ -229,7 +230,7 @@ namespace OpenDialogue
                     if (Nodes.ContainsKey(data.id))
                     {
                         data.id = 0;
-                        while(Nodes.ContainsKey(data.id))
+                        while (Nodes.ContainsKey(data.id))
                         {
                             data.id++;
                         }
@@ -261,8 +262,8 @@ namespace OpenDialogue
                         AddElement(port.port.ConnectTo(node.inputport));
                         Debug.Log(port.NodeId);
                         BaseNode oldNode = Nodes[port.NodeId];
-                       
-                        oldNode.data.ConnectedNodes[port.index]=node.data.id;
+
+                        oldNode.data.ConnectedNodes[port.index] = node.data.id;
                     }
                     break;
 
@@ -522,7 +523,7 @@ namespace OpenDialogue
                 searchWindow.Intialiaze(this, port);
             }
             searchWindow.Position = pos;
-            searchWindow.port=port;
+            searchWindow.port = port;
             return SearchWindow.Open(new SearchWindowContext(pos), searchWindow);
         }
 
@@ -581,7 +582,7 @@ namespace OpenDialogue
             }
 
             //create the new nodes
-            List<int> id= new List<int>();
+            List<int> id = new List<int>();
             foreach (BaseNode node in b)
             {
                 Vector2 Cpos = new Vector2(100, 100) + node.data.pos;
@@ -696,7 +697,7 @@ namespace OpenDialogue
             data.id = dialogue.id;
             data.startIndex = dialogue.startIndex;
             this.AddToSelection(nodes.ToArray().Last());
-            this.viewTransform.position=Nodes.Last().Value.GetPosition().position;
+            this.viewTransform.position = Nodes.Last().Value.GetPosition().position;
             SetupZoom(1, 3, 1, 0.5f);
             FrameSelection();
             SetupZoom(0.1f, 3, 1, 0.5f);
@@ -708,6 +709,8 @@ namespace OpenDialogue
         private void DrawGraph(DialogueData dialogue, bool addtodata)
         {
             List<LineData> dnodes = new List<LineData>();
+            List<GroupsDB> groups = new List<GroupsDB>();
+            groups.AddRange(dialogue.Group);
             dnodes.AddRange(dialogue.Lines);
             data.Lines.Clear();
             data.Group.Clear();
@@ -724,8 +727,7 @@ namespace OpenDialogue
                     AddElement(edge);
                 }
             }
-            List<GroupsDB> groups = new List<GroupsDB>();
-            groups.AddRange(dialogue.Group);
+
             foreach (GroupsDB groupDB in groups)
             {
                 LoadGroup(groupDB.GroupName, groupDB.Position, groupDB.ContainedNodes);

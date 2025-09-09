@@ -93,7 +93,7 @@ MonoBehaviour:
       groupID: 
       id: 2
       dialogueText:
-      - Dialogue0
+      - 2
       extraValues:
       - 0
       - 0
@@ -103,7 +103,7 @@ MonoBehaviour:
       pos: {x: 134, y: 303}
       subType: 0
       NodeType: 0
-      ConnectedNodes: ffffffff
+      ConnectedNodes: 04000000
       q_string1: 
       q_string2: 
       q_bool1: 0
@@ -113,7 +113,7 @@ MonoBehaviour:
       groupID: 
       id: 3
       dialogueText:
-      - Dialogue0
+      - Test2
       extraValues:
       - 0
       - 0
@@ -140,7 +140,7 @@ MonoBehaviour:
       - False
       choices:
       - Dialouge
-      pos: {x: 311, y: 324}
+      pos: {x: 421, y: 264}
       subType: 0
       NodeType: 0
       ConnectedNodes: ffffffff
