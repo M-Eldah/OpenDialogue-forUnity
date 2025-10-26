@@ -1,0 +1,6 @@
+{
+  "name": "OpenDialogue.Runtime",
+  "rootNamespace": "OpenDialogue",
+  "includePlatforms": [],
+  "excludePlatforms": [ "Editor" ]
+}

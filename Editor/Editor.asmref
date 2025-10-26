@@ -1,0 +1,8 @@
+{
+  "name": "OpenDialogue.Editor",
+  "rootNamespace": "OpenDialogue.Editor",
+  "includePlatforms": [ "Editor" ],
+  "references": [
+    "OpenDialogue.Runtime"
+  ]
+}
