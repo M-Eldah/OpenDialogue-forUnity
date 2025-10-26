@@ -1,0 +1,10 @@
+{
+	"name": "com.uhbdev.opendialogue",
+	"version": "1.0.0",
+	"displayName": "OpenDialogue",
+	"description": "an open source dialogue tool for unit",
+	"unity": "2021.3",
+	"dependencies": {
+		"com.unity.textmeshpro": "3.0.6"
+	}
+}
